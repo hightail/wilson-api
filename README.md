@@ -1,8 +1,9 @@
 # Wilson API - V3.0.0
 
-Wilson is framework that adds a distinct component abstraction around Angularjs web applications. It provides
-lazy-loading of javascript bundled based on url to component routing and decorates convenient base-functionality
-onto each component that can be used to greatly enhance development experience and reduce boiler-plate code. 
+Wilson is framework that adds a distinct component abstraction to Angularjs web applications. These components 
+can be lazily-loaded at route-time automatically based on dependencies (this works in conjunction with the Wilson
+server). These components are decorated with common base-functionality that abstracts memory management for eventing
+and other various conveniences that empower developers and reduce boiler-plate code. 
 
 This document provides details around the different concepts in Wilson and their distinctive interfaces. Sections
 are broken up into different pages which contain more detailed documentation.
@@ -53,4 +54,4 @@ as lazily-loaded javascript content is added during navigation.
 1. [Core Module]()
 2. [Component Interface]()
 3. [Routing]()
-4. [Utility Functions]()
+4. [Utility Functions](./concepts/utilities/utilities.md)
