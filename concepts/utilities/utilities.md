@@ -52,19 +52,17 @@ the given targetArray, values are removed and replaced on the given array refere
 remove items between the start/end indices and then the replacement items are inserted into the
 array from the startIndex.
 
+```typescript
+function spliceArray(targetArray: any[], spliceStartIdx?: number, spliceEndIdx?: number, replacements?: any[]) {}
 ```
-spliceArray(targetArray: any[], spliceStartIdx: ?number, spliceEndIdx: ?number, replacements: ?any[])
- 
-
-// E.G.
- 
+Usage:
+```js
 var foo          = [1, 2, 3];
 var replacements = ['bob', 5];
-
+ 
 wilson.utils.spliceArray(foo, 1, 1, replacements);
-
+ 
 console.log(foo) ->  [1, 'bob', 5, 3];
-
 
 ```
 
