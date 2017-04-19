@@ -30,19 +30,19 @@ wilson.service('MyService', ['WilsonUtils', function(WilsonUtils) {
 
 ## Utility Functions
 
-* [spliceArray](#spliceArray)
-* [replaceArray](#replaceArray)
-* [clearArray](#clearArray)
-* [replaceObject](#replaceObject)
-* [clearObject](#clearObject)
-* [getPropFromPath](#getPropFromPath)
-* [setPropFromPath](#setPropFromPath)
-* [bytesToReadable](#bytesToReadable)
-* [generateUUID](#generateUUID)
-* [parseBoolean](#parseBoolean)
-* [printStackTrace](#printStackTrace)
+* [spliceArray](#splicearray)
+* [replaceArray](#replacearray)
+* [clearArray](#cleararray)
+* [replaceObject](#replaceobject)
+* [clearObject](#clearobject)
+* [getPropFromPath](#getpropfrompath)
+* [setPropFromPath](#setpropfrompath)
+* [bytesToReadable](#bytestoreadable)
+* [generateUUID](#generateuuid)
+* [parseBoolean](#parseboolean)
+* [printStackTrace](#printstacktrace)
 * [path.join](#path.join)
-* [keyCodes](#keyCodes)
+* [keyCodes](#keycodes)
 
 
 ### spliceArray
