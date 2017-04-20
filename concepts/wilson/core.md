@@ -5,8 +5,12 @@ This is where your primary interfacing with Wilson will take place. To the devel
 instance should feel like a simple wrapper for angularjs declarations and a means of utility, logging, 
 and config access (with a few exceptions for advanced use cases).
 
+> A detailed typescript definition of wilson can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). NOTE: this file can be referenced in your 
+> IDE to provide syntax highlighting and auto-completion for wilson projects.
 
-## Wilson Interface Methods
+
+Wilson Interface Methods
+====
 
 * [setAppConfig](#setappconfig)
 * [getActivePage](#getactivepage)
@@ -20,19 +24,6 @@ and config access (with a few exceptions for advanced use cases).
 * [class](#class)
 * [utility](#utility)
 * [filter](#filter)
-
-
-## Wilson Properties
-
-* [config](#config)
-* [utilities](../utilities/utilities.md)
-* [log](../logging/logging.md)
-
-
-> NOTE: A detailed typescript definition can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). Note: this file can be referenced in your IDE to provide
-> syntax highlighting and auto-completion for wilson projects.
-
-
   
   
 ## setAppConfig
@@ -142,3 +133,16 @@ wilson.behavior('my-behavior-directive', ['$window', function($window) {
   };
 }]);
 ```
+
+
+
+
+
+
+
+Wilson Properties
+====
+
+* [config](#config)
+* [utilities](../utilities/utilities.md)
+* [log](../logging/logging.md)
