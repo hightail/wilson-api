@@ -29,10 +29,12 @@ and config access (with a few exceptions for advanced use cases).
 * [log](../logging/logging.md)
 
 
-A detailed typescript definition can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). Note: this file can be referenced in your IDE to provide
-syntax highlighting and auto-completion for wilson projects.
+> NOTE: A detailed typescript definition can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). Note: this file can be referenced in your IDE to provide
+> syntax highlighting and auto-completion for wilson projects.
 
 
+  
+  
 ## setAppConfig
 
 Set the wilson instance config to a given object. This method takes a plain javascript object and sets it
