@@ -53,7 +53,7 @@ remove items between the start/end indices and then the replacement items are in
 array from the startIndex.
 
 ```typescript
-function spliceArray(targetArray: any[], startIdx?: number, endIdx?: number, replacements?: any[]) {}
+function spliceArray(targetArray: any[], startIdx?: number, endIdx?: number, replacements?: any[]): any[];
 ```
 Usage Example:
 ```js

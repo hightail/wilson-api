@@ -14,13 +14,19 @@ When using Wilson, all Angularjs constructs are actually created via a Wilson de
 
 E.G.
 ```
-wilson.component(<componentName>,   [..., function(...) { }]);
-wilson.behavior(<componentName>,    [..., function(...) { }]);
-wilson.service(<componentName>,     [..., function(...) { }]);
-wilson.resource(<componentName>,    [..., function(...) { }]);
-wilson.utility(<componentName>,     [..., function(...) { }]);
-wilson.class(<componentName>,       [..., function(...) { }]);
-wilson.filter(<componentName>,      [..., function(...) { }]);
+wilson.component('my-component',  [..., function(...) { }]);
+ 
+wilson.behavior('my-behavior',    [..., function(...) { }]);
+ 
+wilson.service('MyService',       [..., function(...) { }]);
+ 
+wilson.resource('MyResource',     [..., function(...) { }]);
+ 
+wilson.utility('MyUtility',       [..., function(...) { }]);
+ 
+wilson.class('MyClass',           [..., function(...) { }]);
+ 
+wilson.filter('MyFilter',         [..., function(...) { }]);
 ```
 
 Although this initial declaration is not specifically on the 'angular' global instance, under-the-hood, wilson
@@ -51,7 +57,8 @@ as lazily-loaded javascript content is added during navigation.
 ## Wilson Concepts
 
 
-1. [Core Module]()
-2. [Component Interface]()
-3. [Routing]()
+1. [Core Module](./concepts/wilson/core.md)
+2. [Component Interface](./concepts/components/components.md)
+3. [Routing](./concepts/routing/routing.md)
 4. [Utility Functions](./concepts/utilities/utilities.md)
+5. [Logging](./concepts/logging/logging.md)
