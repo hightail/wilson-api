@@ -170,7 +170,7 @@ function factory(name: string, definition: any[]|Function): void;
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
 ```typescript
-resource(name: string, definition: any[]|Function): void;
+function resource(name: string, definition: any[]|Function): void;
 ```
 
 
@@ -179,7 +179,7 @@ resource(name: string, definition: any[]|Function): void;
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
 ```typescript
-class(name: string, definition: any[]|Function): void;
+function class(name: string, definition: any[]|Function): void;
 ```
 
 
@@ -188,7 +188,7 @@ class(name: string, definition: any[]|Function): void;
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
 ```typescript
-utility(name: string, definition: any[]|Function): void;
+function utility(name: string, definition: any[]|Function): void;
 ```
 
 
