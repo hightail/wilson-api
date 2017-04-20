@@ -20,7 +20,7 @@ Wilson Interface Methods
 * [behavior](#behavior)
 * [service](#service)
 * [factory](#factory)
-* [resource](#factory)
+* [resource](#resource)
 * [class](#class)
 * [utility](#utility)
 * [filter](#filter)
@@ -81,7 +81,7 @@ function someHandler() {
 ```
 
 
-### getActiveComponentList
+## getActiveComponentList
 
 Returns a list of all active component objects on wilson.
 
@@ -92,7 +92,7 @@ function getActiveComponentList(): Object[];
 
 ## component
 
-Declare a new component onto the wilson app module. This method is simply a wrapper for declaring a
+Declare a new component onto the wilson app module. This method is a wrapper for declaring a
 "component-style" directive onto angularjs. Wilson components are intended to have isolateScope and
 and explicit controller (which is ensured by wilson upon declaration). 
 
@@ -115,7 +115,7 @@ wilson.component('my-component', {
 
 ## behavior
 
-Declare a new behavior onto the wilson app module. This method is simply a wrapper for declaring an
+Declare a new behavior onto the wilson app module. This method is a wrapper for declaring an
 "attribute-style" directive onto angularjs. There are no restrictions or assumptions made for wilson
 behaviors, all standard angularjs directive configuration properties are supported, please see the 
 angularjs [directive api](https://docs.angularjs.org/api/ng/service/$compile). 
@@ -135,9 +135,61 @@ wilson.behavior('my-behavior-directive', ['$window', function($window) {
 ```
 
 
+## service
+
+Declare a new service onto the wilson app module. This method is wrapper for declaring
+factory-style services on angularjs. Definitions for services are exactly the same as if they
+were declared on angularjs directly. See the angularjs documentation for [$provide.factory](https://docs.angularjs.org/api/auto/service/$provide#factory). 
+
+```typescript
+function service(name: string, definition: any[]|Function): void;
+```
+Usage Example:
+```js
+wilson.service('AuthService', ['$http', function($http) {
+  return {
+    login: function(email, password) {
+      return $http.post('/api/login', { email: email, password: password });
+    }
+  };
+}]);
+```
 
 
+## factory
 
+*Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
+
+```typescript
+function factory(name: string, definition: any[]|Function): void;
+```
+
+
+## resource
+
+*Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
+
+```typescript
+resource(name: string, definition: any[]|Function): void;
+```
+
+
+## class
+
+*Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
+
+```typescript
+class(name: string, definition: any[]|Function): void;
+```
+
+
+## utility
+
+*Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
+
+```typescript
+utility(name: string, definition: any[]|Function): void;
+```
 
 
 Wilson Properties
