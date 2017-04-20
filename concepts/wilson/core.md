@@ -1,4 +1,4 @@
-## Wilson Core
+# Wilson Core
 
 Each app that uses Wilson has a global "wilson" instance that is decorated onto the window object.
 This is where your primary interfacing with Wilson will take place. To the developer, the global "wilson" 
@@ -33,7 +33,7 @@ A detailed typescript definition can be found [here](https://raw.githubuserconte
 syntax highlighting and auto-completion for wilson projects.
 
 
-### setAppConfig
+## setAppConfig
 
 Set the wilson instance config to a given object. This method takes a plain javascript object and sets it
 as the config. Read more about the wilson config [here](#config). 
@@ -53,7 +53,8 @@ wilson.setAppConfig({
 ```
 
 
-### getActivePage
+
+## getActivePage
 
 Returns the name of the currently active page component. Effectively, which page are you on.
 
@@ -62,7 +63,7 @@ function getActivePage(): string;
 ```
 
 
-### getActiveComponent
+## getActiveComponent
 
 Return relevant object references and information for a given active wilsonComponentId. The returned
 object contains a stored reference to $scope and controller for the given wilsonComponentId. This is useful
@@ -96,7 +97,7 @@ function getActiveComponentList(): Object[];
 ```
 
 
-### component
+## component
 
 Declare a new component onto the wilson app module. This method is simply a wrapper for declaring a
 "component-style" directive onto angularjs. Wilson components are intended to have isolateScope and
@@ -119,7 +120,7 @@ wilson.component('my-component', {
 ```
 
 
-### behavior
+## behavior
 
 Declare a new behavior onto the wilson app module. This method is simply a wrapper for declaring an
 "attribute-style" directive onto angularjs. There are no restrictions or assumptions made for wilson
