@@ -9,7 +9,7 @@ and config access (with a few exceptions for advanced use cases).
 > IDE to provide syntax highlighting and auto-completion for wilson projects.
 
 
-Wilson Interface Methods
+Wilson Interface
 ====
 
 * [setAppConfig](#setappconfig)
@@ -24,6 +24,9 @@ Wilson Interface Methods
 * [class](#class)
 * [utility](#utility)
 * [filter](#filter)
+* [config](#wilsonconfig)
+* [utilities](../utilities/utilities.md)
+* [log](../logging/logging.md)
   
   
 ## setAppConfig
@@ -192,9 +195,71 @@ function utility(name: string, definition: any[]|Function): void;
 ```
 
 
-Wilson Properties
+Wilson Config
 ====
 
-* [config](#config)
-* [utilities](../utilities/utilities.md)
-* [log](../logging/logging.md)
+An application using wilson is required to provide a configuration object to the wilson instance. This
+config object contains properties that represent version, selector prefixes, mountpath for the wilson server
+application and other values that allow each application to use wilson flexibly.
+
+There are 4 required sections of this config from wilson's perspective:
+|Section         |Description                  |
+|----------------|-----------------------------|
+|**app**         |*Core configuration settings*| 
+|**routes**      |*Application URL routes*     | 
+|**tags**        |*Client identity info*       |
+|**i18n**        |*i18next configuration*      |
+
+
+It is recommended that apps using wilson adopt the wilson.config object as their primary client-side
+app config. Any config-type data that an application requires during runtime can be designated onto this 
+config up-front, and will then be accessible via the global wilson instance from anywhere. 
+
+Example Config:
+
+```json
+{
+  "app": {
+    "name":               "MyApplication",
+    "version":            "1.0.0",
+    "connectionFilters":  "EYJwhgdgJgvAzgBzAYwKZwD6gPYHc6ogzIAWI2AtqhlKgG4CWaMFKGANpAOYCuYXqGKggYEnAC4AzbCAoxacANbjsCIA"
+  },
+  "routes": [
+    {
+      "path":       "/",
+      "component":  "home",
+      "title":      "Home Page",
+      "options":    {}
+    },
+    {
+      "path":       null,
+      "component":  "404",
+      "title":      "Not Found",
+      "options":    {}
+    }
+  ],
+  "tags": {
+    "brand":      "my-app",
+    "browser":    "chrome",
+    "device":     "mac",
+    "platform":   "desktop",
+    "language":   "en"
+  },
+  "i18n": {
+    "clientSafeNamespaces":         "all",
+    "defaultLng":                   "en",
+    "fallbackLng":                  "en",
+    "lng":                          "en",
+    "localStorageExpirationTime":   604800000,
+    "namespaces":                   [],
+    "resStore":                     {},
+    "sendMissing":                  true,      
+    "supportedLngs":                ["en"],
+    "useLocalStorage":              false
+  }
+}
+```
+
+## App Config Settings
+
+App settings are mostly descriptive, including the name and version of the app. 
