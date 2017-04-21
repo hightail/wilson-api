@@ -10,7 +10,7 @@ are broken up into different pages which contain more detailed documentation.
 
 ## Wilson Basics
 
-When using Wilson, all Angularjs constructs are actually created via a Wilson declaration.
+When using Wilson, all Angularjs constructs are created via a Wilson declaration.
 
 E.G.
 ```
@@ -58,7 +58,8 @@ as lazily-loaded javascript content is added during navigation.
 
 
 1. [Core Module](./concepts/wilson/core.md)
-2. [Component Interface](./concepts/components/components.md)
-3. [Routing](./concepts/routing/routing.md)
-4. [Utility Functions](./concepts/utilities/utilities.md)
-5. [Logging](./concepts/logging/logging.md)
+2. [Config](./concepts/wilson/core.md#wilson-config)
+3. [Component Interface](./concepts/components/components.md)
+4. [Routing](./concepts/routing/routing.md)
+5. [Utility Functions](./concepts/utilities/utilities.md)
+6. [Logging](./concepts/logging/logging.md)
