@@ -18,7 +18,7 @@ components see the [detailed wilson component api](../components/components.md)
 
 All routes for wilson apps must be declared in a external json file. By default the wilson server application looks for
 routes in "/client/routing.json" (this is configurable on the server via the property **server.projectPaths.routes**). These
-routes are read by the server and decorated onto the wilson.config object that is sent to the client. [See more about wilson.config](./wilson/core.md#wilson-config)
+routes are read by the server and decorated onto the [wilson.config](../wilson/core.md#wilson-config) object that is sent to the client.
 
 Example routing.json
 ```json
