@@ -195,7 +195,7 @@ console.log(obj.foo.bar);   // --> "Hello"
 ```
 
 
-## bytesToReadable
+## bytesToReadable(bytes, decimalPoint)<a name="bytesToReadable"></a>
 
 Convert a number representing a byte count to a human readable size in Bytes, KB, MB, GB etc. This method uses a 
 base 2 kibi-byte calculation where 1 kilobyte === 1024 bytes. Default decimalPoint is 1.
@@ -223,7 +223,7 @@ function generateUUID(): string;
 ```
 
 
-## parseBoolean(value)
+## parseBoolean(value)<a name="parseBoolean"></a>
 
 Casts a given value to a boolean. This method is more exhaustive than the typical !! casting strategy. Specifically, it will 
 identify string values of 'false', '0', 'NaN', 'null', and 'undefined' as falsey.
