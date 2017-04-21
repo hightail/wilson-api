@@ -21,7 +21,7 @@ function someHandler() {
 }
 ```
 
-Logging in wilson can be controlled by calling the [setLevel()]() function. In production mode, logging is off by
+Logging in wilson can be controlled by calling the [setLevel()](#setLevel) function. In production mode, logging is off by
 default, this means that all calls to logging functions are no-operation. When running in development mode, the logLevel
 is set to **ALL** by default, meaning all messages will be output to the console. Wilson log levels follow the same pattern
 as [log4j log levels](https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm)
@@ -41,12 +41,16 @@ as [log4j log levels](https://www.tutorialspoint.com/log4j/log4j_logging_levels.
 
 # Logging Functions
 
+* [setLevel](#setLevel)
 * [trace](#trace)
 * [debug](#debug)
 * [info](#info)
 * [warn](#warn)
 * [error](#error)
 * [fatal](#fatal)
+
+
+## <a name="setLevel"></a>setLevel(level)
 
 
 ## <a name="trace"></a>trace(message, ...data)
