@@ -194,8 +194,8 @@ wilson.utils.getPropFromPath(obj, 'foo.bar', 'Hello');
 console.log(obj.foo.bar);   // --> "Hello"
 ```
 
-
-## bytesToReadable(bytes, decimalPoint)<a name="bytesToReadable"></a>
+<a name="bytestoreadable"></a>
+## bytesToReadable(bytes, decimalPoint)
 
 Convert a number representing a byte count to a human readable size in Bytes, KB, MB, GB etc. This method uses a 
 base 2 kibi-byte calculation where 1 kilobyte === 1024 bytes. Default decimalPoint is 1.
@@ -222,8 +222,8 @@ Creates and returns a RFC4122 v4 compliant UUID string.  Useful for creating ide
 function generateUUID(): string;
 ```
 
-
-## parseBoolean(value)<a name="parseBoolean"></a>
+<a name="parseboolean"></a>
+## parseBoolean(value)
 
 Casts a given value to a boolean. This method is more exhaustive than the typical !! casting strategy. Specifically, it will 
 identify string values of 'false', '0', 'NaN', 'null', and 'undefined' as falsey.
