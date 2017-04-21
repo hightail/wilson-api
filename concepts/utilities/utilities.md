@@ -40,7 +40,7 @@ wilson.service('MyService', ['WilsonUtils', function(WilsonUtils) {
 * [bytesToReadable](#bytestoreadable)
 * [generateUUID](#generateuuid)
 * [parseBoolean](#parseboolean)
-* [printStackTrace](#printstacktrace)
+* [bool](#parseboolean)
 * [path.join](#path.join)
 * [keyCodes](#keycodes)
 
@@ -214,7 +214,7 @@ console.log(preciseSize);     // -->  "102.549 MB"
 ```
 
 
-## generateUUID
+## generateUUID()
 
 Creates and returns a RFC4122 v4 compliant UUID string.  Useful for creating identifiers for entities within an application.
 
@@ -223,7 +223,7 @@ function generateUUID(): string;
 ```
 
 
-## parseBoolean
+## parseBoolean(value)
 
 Casts a given value to a boolean. This method is more exhaustive than the typical !! casting strategy. Specifically, it will 
 identify string values of 'false', '0', 'NaN', 'null', and 'undefined' as falsey.
@@ -244,4 +244,8 @@ console.log(wilson.utils.parseBoolean(truthyString));   // --> false
 
 
 
-## printStackTrace
+## path.join
+
+
+
+## keyCodes
