@@ -11,13 +11,14 @@ is a SPA, it does not need to load a monolithic javascript payload that contains
 to different pages, new javascript is added to support the new areas. This greatly reduces the payload size of javascript needed
 to initially load the application and removes development concern as a codebase grows larger and larger over time.
 
-Routing is depends on the use of a wilson component as the target of any given route. For more information on wilson
+Routing is dependent on the use of a wilson component as the target of any given route. For more information on wilson
 components see the [detailed wilson component api](../components/components.md)
   
 # Route Definition
 
 All routes for wilson apps must be declared in a external json file. By default the wilson server application looks for
-routes in "/client/routing.json" (this is configurable on the server via the property **server.projectPaths.routes**). 
+routes in "/client/routing.json" (this is configurable on the server via the property **server.projectPaths.routes**). These
+routes are read by the server and decorated onto the wilson.config object that is sent to the client. [See more about wilson.config](./wilson/core.md#wilson-config)
 
 Example routing.json
 ```json
