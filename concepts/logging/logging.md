@@ -70,7 +70,7 @@ wilson.log.info('This info will print');        // --> Prints info message to co
  
 wilson.log.error('This error will print');      // --> Prints error message to console
  
-wilson.log.debug('This debug will not print');  // --> Does nothing as the logLevel is INFO and ignores debug messages
+wilson.log.debug('This debug will not print');  // --> Does nothing as the logLevel is INFO
 ```
 
 ## <a name="trace"></a>trace(message, ...data)
