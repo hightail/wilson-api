@@ -203,12 +203,13 @@ config object contains properties that represent version, selector prefixes, mou
 application and other values that allow each application to use wilson flexibly.
 
 There are 4 required sections of this config from wilson's perspective:
-|Section         |Description                  |
-|----------------|-----------------------------|
-|**app**         |*Core configuration settings*| 
-|**routes**      |*Application URL routes*     | 
-|**tags**        |*Client identity info*       |
-|**i18n**        |*i18next configuration*      |
+
+| Section          | Description                   |
+| ---------------- | ----------------------------- |
+| **app**          | *Core configuration settings* | 
+| **routes**       | *Application URL routes*      | 
+| **tags**         | *Client identity info*        |
+| **i18n**         | *i18next configuration*       |
 
 
 It is recommended that apps using wilson adopt the wilson.config object as their primary client-side
