@@ -3,7 +3,7 @@
 Wilson provides a number of utility functions that are decorated onto the global "wilson" instance. These
 functions provide various conveniences to developers.
 
-From the code, these methods can be accessed on either the global "wilson" instance or by injecting the "WilsonUtils"
+From the code, these functions can be accessed on either the global "wilson" instance or by injecting the "WilsonUtils"
 service into any component controller, behavior directive, service or filter declaration.
 
 E.G.

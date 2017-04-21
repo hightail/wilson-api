@@ -4,7 +4,9 @@ Each app that uses Wilson has a global "wilson" instance that is decorated onto 
 This is where the app's interfacing with Wilson will take place. To the developer, the global "wilson" 
 instance should feel like a simple wrapper for angularjs declarations and a means of utility, logging, 
 and config access. As an added convenience, wilson decorates angular's $rootScope instance with a few 
-convenience/utility methods. [See Wilson $rootScope utilities](#wilson-rootscope-utilities) 
+convenience/utility methods. 
+
+[See Wilson $rootScope utilities](#wilson-rootscope-utilities) 
 
 > A detailed typescript definition of wilson can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). NOTE: this file can be referenced in your 
 > IDE to provide syntax highlighting and auto-completion for wilson projects.
