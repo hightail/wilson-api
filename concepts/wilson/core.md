@@ -1,9 +1,10 @@
 # Wilson Core
 
 Each app that uses Wilson has a global "wilson" instance that is decorated onto the window object.
-This is where your primary interfacing with Wilson will take place. To the developer, the global "wilson" 
+This is where the app's interfacing with Wilson will take place. To the developer, the global "wilson" 
 instance should feel like a simple wrapper for angularjs declarations and a means of utility, logging, 
-and config access (with a few exceptions for advanced use cases).
+and config access. As an added convenience, wilson decorates angular's $rootScope instance with a few 
+convenience/utility methods. [See Wilson $rootScope utilities](#wilson-$rootscope-utilities) 
 
 > A detailed typescript definition of wilson can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). NOTE: this file can be referenced in your 
 > IDE to provide syntax highlighting and auto-completion for wilson projects.
@@ -24,7 +25,7 @@ Wilson Interface
 * [class](#class)
 * [utility](#utility)
 * [filter](#filter)
-* [config](#wilsonconfig)
+* [config](#wilson-config)
 * [utilities](../utilities/utilities.md)
 * [log](../logging/logging.md)
   
@@ -321,3 +322,57 @@ i18n support via the use of this library both server-side and client-side. On th
 markup templates before they make it to the client browser. On the client, wilson provides translation methods for dynamic
 strings that are templated during runtime of the application.
 
+
+
+Wilson $rootScope Utilities
+====
+
+- [triggerDigest](#triggerdigest)
+- [bindToDigest](#bindtodigest)
+
+
+## triggerDigest
+
+Triggers an angular digest cycle. This method will not throw an exception if a digest is in progress (in the event that a
+digest is in progress, another will be triggered). This method returns a promise that will be called after the digest.
+ 
+```typescript
+function triggerDigest(): Promise;
+```
+
+Usage Example:
+```js
+$rootScope.message = 'Hello';     // --> Set message
+    
+function updateMessage(msg) {
+  $rootScope.message = msg;
+}
+    
+setTimeout(function() {
+  updateMessage('World');      // --> Function updates message but will not trigger a digest automatically
+  $rootScope.triggerDigest();  // --> Triggers the digest cycle and the updated message is now propagated to the view  
+}, 2000);
+```
+
+## bindToDigest
+
+Binds a given function to a digest cycle trigger. This method Returns a new function that invokes the original function 
+and then triggers a digest cycle. This is useful if for out-of-context event handlers that update bound data references.
+
+```typescript
+function bindToDigest(method: Function, context: any): Function;
+```
+
+Usage Example:
+```js
+$rootScope.message = 'Hello';
+ 
+var updateMessage = $rootScope.bindToDigest(function(msg) {
+  $rootScope.message = msg;
+});
+ 
+setTimeout(function() {
+  updateMessage('World');      // --> Updates message and triggers a digest cycle - changes are propagated to the view 
+}, 2000);
+
+```
