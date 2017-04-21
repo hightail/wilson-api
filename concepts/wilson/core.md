@@ -302,7 +302,7 @@ console.log(tags.language);       // --> "en"
 ## Route Config
 
 All URL routes for an application are defined on wilson.config.routes. At bootstrap time, wilson declares all routes onto 
-angular using the [ngRoute module](). Similar to routing in the new angular.io, route entries on wilson map a URL "path" 
+angular using the [ngRoute module](https://docs.angularjs.org/api/ngRoute). Similar to routing in the new angular.io, route entries on wilson map a URL "path" 
 to a "component". 
 
 #### [Detailed Wilson routing api](../routing/routing.md)
