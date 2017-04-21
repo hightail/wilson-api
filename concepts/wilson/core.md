@@ -13,10 +13,10 @@ convenience/utility methods. [See Wilson $rootScope utilities](#wilson-rootscope
 Wilson Interface
 ====
 
-* [setAppConfig](#setappconfig)
-* [getActivePage](#getactivepage)
-* [getActiveComponent](#getactivecomponent)
-* [getActiveComponentList](#getactivecomponentlist)
+* [setAppConfig](#setAppConfig)
+* [getActivePage](#getActivePage)
+* [getActiveComponent](#getActiveComponent)
+* [getActiveComponentList](#getActiveComponentList)
 * [component](#component)
 * [behavior](#behavior)
 * [service](#service)
@@ -30,7 +30,7 @@ Wilson Interface
 * [log](../logging/logging.md)
   
   
-## setAppConfig
+## <a name="setAppConfig"></a>setAppConfig(config)
 
 Set the wilson instance config to a given object. This method takes a plain javascript object and sets it
 as the config. Read more about the wilson config [here](#config). 
@@ -51,7 +51,7 @@ wilson.setAppConfig({
 
 
 
-## getActivePage
+## <a name="getActivePage"></a>getActivePage()
 
 Returns the name of the currently active page component. Effectively, which page are you on.
 
@@ -60,7 +60,7 @@ function getActivePage(): string;
 ```
 
 
-## getActiveComponent
+## <a name="getActiveComponent"></a>getActiveComponent(componentId)
 
 Return relevant object references and information for a given active wilsonComponentId. The returned
 object contains a stored reference to $scope and controller for the given wilsonComponentId. This is useful
@@ -85,7 +85,7 @@ function someHandler() {
 ```
 
 
-## getActiveComponentList
+## <a name="getActiveComponentList"></a>getActiveComponentList()
 
 Returns a list of all active component objects on wilson.
 
@@ -94,7 +94,7 @@ function getActiveComponentList(): Object[];
 ```
 
 
-## component
+## <a name="component"></a>component(name, config)
 
 Declare a new component onto the wilson app module. This method is a wrapper for declaring a
 "component-style" directive onto angularjs. Wilson components are intended to have isolateScope and
@@ -117,7 +117,7 @@ wilson.component('my-component', {
 ```
 
 
-## behavior
+## <a name="behavior"></a>behavior(name, definition)
 
 Declare a new behavior onto the wilson app module. This method is a wrapper for declaring an
 "attribute-style" directive onto angularjs. There are no restrictions or assumptions made for wilson
@@ -139,7 +139,7 @@ wilson.behavior('my-behavior-directive', ['$window', function($window) {
 ```
 
 
-## service
+## <a name="service"></a>service(name, definition)
 
 Declare a new service onto the wilson app module. This method is wrapper for declaring
 factory-style services on angularjs. Definitions for services are exactly the same as if they
@@ -160,7 +160,7 @@ wilson.service('AuthService', ['$http', function($http) {
 ```
 
 
-## factory
+## <a name="factory"></a>factory(name, definition)
 
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
@@ -169,7 +169,7 @@ function factory(name: string, definition: any[]|Function): void;
 ```
 
 
-## resource
+## <a name="resource"></a>resource(name, definition)
 
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
@@ -178,7 +178,7 @@ function resource(name: string, definition: any[]|Function): void;
 ```
 
 
-## class
+## <a name="class"></a>class(name, definition)
 
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
@@ -187,7 +187,7 @@ function class(name: string, definition: any[]|Function): void;
 ```
 
 
-## utility
+## <a name="utility"></a>utility(name, definition)
 
 *Alias* for **service()**. Allows semantic distinction between the service types of a wilson app.
 
