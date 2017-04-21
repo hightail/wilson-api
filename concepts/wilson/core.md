@@ -214,7 +214,11 @@ There are 4 required sections of this config from wilson's perspective:
 
 It is recommended that apps using wilson adopt the wilson.config object as their primary client-side
 app config. Any config-type data that an application requires during runtime can be designated onto this 
-config up-front, and will then be accessible via the global wilson instance from anywhere. 
+config up-front, and will then be accessible via the global wilson instance from anywhere.
+
+The wilson server instance ultimately sets most of the values on the config upon serving it to the browser. Although
+there is a method available to setAppConfig directly on the wilson instance, the config is pre-set when the config
+module is fetched from the server (required as the first step of wilson bootstrapping).
 
 Example Config:
 
@@ -261,6 +265,59 @@ Example Config:
 }
 ```
 
-## App Config Settings
+## App Config
 
-App settings are mostly descriptive, including the name and version of the app. 
+App settings are mostly descriptive, including the name and version of the app. The one notable setting here 
+is the **connectionFilters** property.
+
+**connectionFilters** is a hash of the keys/values in the **tags** section of the config. Specifically the server uses the
+[lz-string](https://github.com/pieroxy/lz-string) library's [compressToBase64()](http://pieroxy.net/blog/pages/lz-string/guide.html#inline_menu_4) method
+to create a hash that can be appended to server request URLs for component bundles (this allows the wilson server to serve back templates
+based on the user's **tags**. NOTE: This is also vital for caching when using a CDN).
+
+Code-based Explanation:
+```js
+
+var connectionFilters = wilson.config.app.connectionFilters;
+var rawFilters        = LZString.decompressFromBase64(connectionFilters);
+var tags              = wilson.config.tags;
+
+console.log(connectionFilters);   // --> "EYJwhgdgJgvAzgBzAYwKZwD6gPYHc6ogzIAWI2AtqhlKgG4CWaMFKGANpAOYCuYXqGKggYEnAC4AzbCAoxacANbjsCIA"
+ 
+console.log(rawFilters);          // --> "brand=spaces|browser=chrome|device=mac|language=en|platform=desktop"
+
+console.log(tags.brand);          // --> "spaces"
+ 
+console.log(tags.browser);        // --> "chrome"
+ 
+console.log(tags.device);         // --> "mac"
+ 
+console.log(tags.platform);       // --> "desktop"
+ 
+console.log(tags.language);       // --> "en"
+```
+
+
+## Route Config
+
+All URL routes for an application are defined on wilson.config.routes. At bootstrap time, wilson declares all routes onto 
+angular using the [ngRoute module](). Similar to routing in the new angular.io, route entries on wilson map a URL "path" 
+to a "component". 
+
+#### [Detailed Wilson routing api](../routing/routing.md)
+
+
+## Tags Config
+
+The tags properties in the wilson config represent identifying information for the currently active client. This info 
+includes device-type, platform, browser, language and even branding. This means that client wilson applications to not 
+have to use javascript tactics to detect these characteristics, but can simply imply them from the global wilson config.
+
+
+## i18n Config
+
+The i18n settings follow the [i18next](https://github.com/i18next/i18next/tree/2.2.0) library configuration. Wilson provides 
+i18n support via the use of this library both server-side and client-side. On the wilson server, i18next is used to pre-internationalie
+markup templates before they make it to the client browser. On the client, wilson provides translation methods for dynamic
+strings that are templated during runtime of the application.
+
