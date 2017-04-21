@@ -30,22 +30,22 @@ wilson.service('MyService', ['WilsonUtils', function(WilsonUtils) {
 
 # Utility Functions
 
-* [spliceArray](#splicearray)
-* [replaceArray](#replacearray)
-* [clearArray](#cleararray)
-* [replaceObject](#replaceobject)
-* [clearObject](#clearobject)
-* [getPropFromPath](#getpropfrompath)
-* [setPropFromPath](#setpropfrompath)
-* [bytesToReadable](#bytestoreadable)
-* [generateUUID](#generateuuid)
-* [parseBoolean](#parseboolean)
-* [bool](#parseboolean)
-* [path.join](#path.join)
+* [spliceArray](#spliceArray)
+* [replaceArray](#replaceArray)
+* [clearArray](#clearArray)
+* [replaceObject](#replaceObject)
+* [clearObject](#clearObject)
+* [getPropFromPath](#getPropFromPath)
+* [setPropFromPath](#setPropFromPath)
+* [bytesToReadable](#bytesToReadable)
+* [generateUUID](#generateUUID)
+* [parseBoolean](#parseBoolean)
+* [bool](#parseBoolean)
+* [path.join](#pathJoin)
 * [keyCodes](#keycodes)
 
 
-## spliceArray
+## <a name="spliceArray"></a>spliceArray(targetArray, startIdx, endIdx, replacements)
 
 Remove values from an array and optionally replace a set number of new items into the array. This function modifies
 the given targetArray, values are removed and replaced on the given array reference. The array is first modified to 
@@ -67,13 +67,13 @@ console.log(foo); // -->  [1, 'bob', 5, 3];
 ```
 
 
-## replaceArray
+## <a name="replaceArray"></a>replaceArray(destination, source)
 
 Replace the content of the given destinationArray with the items of the sourceArray. The original destinationArray 
 reference is preserved, the destinationArray is effectively cleared and then filled with the items of sourceArray.
 
 ```typescript
-function replaceArray(destination: any[], source: any[]): any[];
+function replaceArray(destination: any[], source: any[]): void;
 ```
 Usage Example:
 ```js
@@ -90,7 +90,7 @@ assert(dest === ref); // --> true
 ```
 
 
-## clearArray
+## <a name="clearArray"></a>clearArray(targetArray)
 
 Clear all items from the given array reference (mutating the given targetArray).
 
@@ -111,7 +111,7 @@ assert(list === ref); // --> true
 ```
 
 
-## replaceObject
+## <a name="replaceObject"></a>replaceObject(destination, source)
 
 Replace the contents of one object with another. Clears all properties from the destination object and then copies
 all new properties from the source object to the destination. The reference to the destination object remains in
@@ -135,7 +135,7 @@ assert(dest === ref); // --> true
 ```
 
 
-## clearObject
+## <a name="clearObject"></a>clearObject(targetObj)
 
 Clear all properties of a given object. Mutates passed in the object reference.
 
@@ -155,7 +155,7 @@ assert(obj === ref);  // --> true
 ```
 
 
-## getPropFromPath
+## <a name="getPropFromPath"></a>getPropFromPath(obj, path)
 
 Retrieve a property from an object using "property dot" notation. Returns null if not found.
 
@@ -177,7 +177,7 @@ console.log(bar);   // --> "Hello"
 ```
 
 
-## setPropFromPath
+## <a name="setPropFromPath"></a>setPropFromPath(obj, path, value)
 
 Set a property on an object using "property dot" notation. The entire path will be created. If properties in the
 path do not exist, they will be provisioned.
@@ -214,7 +214,7 @@ console.log(preciseSize);     // -->  "102.549 MB"
 ```
 
 
-## generateUUID()
+## <a name="generateUUID"></a>generateUUID()
 
 Creates and returns a RFC4122 v4 compliant UUID string.  Useful for creating identifiers for entities within an application.
 
@@ -223,7 +223,7 @@ function generateUUID(): string;
 ```
 
 
-## <a name="parseboolean"></a>parseBoolean(value)
+## <a name="parseBoolean"></a>parseBoolean(value)
 
 Casts a given value to a boolean. This method is more exhaustive than the typical !! casting strategy. Specifically, it will 
 identify string values of 'false', '0', 'NaN', 'null', and 'undefined' as falsey.
@@ -244,8 +244,26 @@ console.log(wilson.utils.parseBoolean(truthyString));   // --> false
 
 
 
-## path.join
+## <a name="pathJoin"></a>path.join(...paths)
 
+Joins all given path segments with '/'. All segments will be converted to string. This method is useful for 
+constructing URL paths with dynamic segments.
 
+```typescript
+function join(...paths: any[]): string;
+```
+Usage Example:
+```js
+var entityType  = 'books';
+var apiEndpoint = wilson.utils.path.join('/api/vi', entityType);
+ 
+console.log(apiEndpoint);   // --> "/api/v1/books"
+```
 
 ## keyCodes
+
+**keyCodes** is a special object on wilson.utils that contains a human-readable mapping of each keyboard key to 
+its respective keyCode. This allows wilson applications to use readable, self-documenting references to these codes rather
+than using the numeric keyCode itself. The keyCode list is quite extensive, so it is not listed directly in this page.
+ 
+#### [See full keyCode list](./keycodes.md)
