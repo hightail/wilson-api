@@ -4,7 +4,7 @@ Each app that uses Wilson has a global "wilson" instance that is decorated onto 
 This is where the app's interfacing with Wilson will take place. To the developer, the global "wilson" 
 instance should feel like a simple wrapper for angularjs declarations and a means of utility, logging, 
 and config access. As an added convenience, wilson decorates angular's $rootScope instance with a few 
-convenience/utility methods. [See Wilson $rootScope utilities](#wilson-$rootscope-utilities) 
+convenience/utility methods. [See Wilson $rootScope utilities](#wilson-rootscope-utilities) 
 
 > A detailed typescript definition of wilson can be found [here](https://raw.githubusercontent.com/hightail/wilson/master/wilson.d.ts). NOTE: this file can be referenced in your 
 > IDE to provide syntax highlighting and auto-completion for wilson projects.
@@ -318,7 +318,7 @@ have to use javascript tactics to detect these characteristics, but can simply i
 ## i18n Config
 
 The i18n settings follow the [i18next](https://github.com/i18next/i18next/tree/2.2.0) library configuration. Wilson provides 
-i18n support via the use of this library both server-side and client-side. On the wilson server, i18next is used to pre-internationalie
+i18n support via the use of this library both server-side and client-side. On the wilson server, i18next is used to pre-internationalize
 markup templates before they make it to the client browser. On the client, wilson provides translation methods for dynamic
 strings that are templated during runtime of the application.
 
