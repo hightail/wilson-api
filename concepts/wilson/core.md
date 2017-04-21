@@ -327,11 +327,11 @@ strings that are templated during runtime of the application.
 Wilson $rootScope Utilities
 ====
 
-- [triggerDigest](#triggerdigest)
-- [bindToDigest](#bindtodigest)
+- [triggerDigest](#triggerDigest)
+- [bindToDigest](#bindToDigest)
 
 
-## triggerDigest
+## <a name="triggerDigest"></a>triggerDigest()
 
 Triggers an angular digest cycle. This method will not throw an exception if a digest is in progress (in the event that a
 digest is in progress, another will be triggered). This method returns a promise that will be called after the digest.
@@ -354,7 +354,7 @@ setTimeout(function() {
 }, 2000);
 ```
 
-## bindToDigest
+## <a name="bindToDigest"></a>bindToDigest(method, context)
 
 Binds a given function to a digest cycle trigger. This method Returns a new function that invokes the original function 
 and then triggers a digest cycle. This is useful if for out-of-context event handlers that update bound data references.
