@@ -84,7 +84,7 @@ Example route entry with options:
     {
       "path":       "/user-profile/:userId",      
       "component":  "user-profile",
-      "title":      "User - ${userId}",          
+      "title":      "Profile",          
       "options": {
         "loggedOutRedirect":  "/login"            
       }
@@ -179,7 +179,7 @@ Handles the loading of any required dependencies before a route change is fulfil
 determines whether routing may continue. A resolved promise means routing should continue normally, a rejected promise
 will stop the current route from completing.
 
-This method accepts one parameters:
+This method accepts one parameter:
 
 * *routeInfo* - The full route config entry for the current route
  
