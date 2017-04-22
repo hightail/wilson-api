@@ -17,7 +17,7 @@ components see the [detailed wilson component api](../components/components.md)
 > Under-the-hood, wilson uses the standard angularjs [ngRoute](https://docs.angularjs.org/api/ngRoute) module. For more
 > detailed information about angularjs routing see the [$routeProvider documentation](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider).
   
-## Route Definition
+# Route Definition
 
 All routes for wilson apps must be declared in a external json file. By default the wilson server application looks for
 routes in "/client/routing.json" (this is configurable on the server via the property **server.projectPaths.routes**). These
@@ -48,7 +48,7 @@ for any non-matched route (effectively 404 Not Found). Wilson will throw an erro
 a null route in the config or if the null route is not the final route entry.
 
 
-## Route Entries
+# Route Entries
 
 Each route entry has 4 distinct properties:
 
@@ -67,8 +67,111 @@ any params in the **path** property using [lodash templating syntax](https://lod
 The **options** property provides a blank canvas for applications to build intricate routing functionality. Using these 
 properties in conjunction with the IRouteService interface, developers can create new routing constructs as they desire.
  
-## IRouteService Interface
+# IRouteService
 
 Every wilson application is required to implement a special service call IRouteService. This service is used at specific
 points during wilson routing to determine how/when to proceed with route fulfillment. This allows the application to control
-things like restricted routes, path forwarding, session-based redirections and much more. IRouteService
+things like restricted routes, path forwarding, dependency resolution, session-based redirections and much more.
+
+IRouteService has access to all route information including the options and data for the current route, this allows distinctive
+configuration per-route that allows for intelligent handling.
+
+Example route entry with options: 
+```json
+{
+  "routes": [
+    {
+      "path":       "/user-profile/:userId",      
+      "component":  "user-profile",
+      "title":      "User - ${userId}",          
+      "options": {
+        "loggedOutRedirect":  "/login"            
+      }
+    }
+  ]
+}
+```
+
+Note the **loggedOutRedirect" options property. Let's assume this property should do exactly what it sounds like it should do- 
+redirect a user without a session to the "/login" route. This functionality can easily be implemented via IRouteService's 
+[**handleRouteChange()**](#handleRouteChange) method.
+
+Example handling in IRouteService:
+```js
+wilson.service('IRouteService', ['$q', '$location', 'AuthService', 
+  function($q, $location, AuthService) {
+    
+    function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
+      
+      // If user is not logged in and there is a loggedOutRedirect defined, redirect
+      if (routeOptions.loggedOutRedirect && !AuthService.isLoggedIn()) {
+        $location.replace();
+        $location.path(routeOptions.loggedOutRedirect);    // --> redirect to "/login" (from case above)
+        return $q.reject();
+      }
+      
+      return $q.when();
+    }
+    
+    // Return service
+    return { handleRouteInfo: handleRouteInfo };
+  }
+])
+```
+
+As you can see in the example, the handleRouteChange method has access to routeOptions (the options object 
+from the current route). IRouteService can inject other application services and use custom logic to support
+any number of specialized functionalities like the one above.
+
+
+# IRouteService Required Functions
+
+* [handleRouteChange](#handleRouteChange)
+* [loadDependencies](#loadDependencies)
+* [loadSession](#loadSession)
+* [translateTitle](#translateTitle)
+
+> Note that the examples below implement an IRouteService that has only the sample method. When
+> implementing an actual IRouteService, all of the methods below MUST be included on the service.
+
+## <a name="handleRouteChange"></a>handleRouteChange(currentRoute, routeOptions, routeInfo)
+
+Handles application logic before a route change is fulfilled. Returns a promise that will
+determines whether routing continues or is cancelled. A resolved promise means routing should
+continue normally, a rejected promise will stop the current route from completing.
+
+This method accepts three important params:
+
+* *currentRoute* - The URL path of the current route
+* *routeOptions* - All data and options properties from the current route
+* *routeInfo*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- The full route config entry for the current route  
+
+```typescript
+function handleRouteChange(currentRoute: string, routeOptions: Object, routeInfo: Object): Promise;
+```
+Implementation Example:
+```js
+wilson.service('IRouteService', ['$q', '$location', 
+  function($q, $location) {
+    
+    function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
+      
+      if (routeOptions.forward) {
+        $location.replace();
+        $location.path(routeOptions.forward);
+        return $q.reject();
+      }
+      
+      return $q.when();
+    }
+    
+    // Return service
+    return { handleRouteInfo:  handleRouteInfo };
+  }
+])
+```
+
+
+## <a name="loadDependencies"></a>loadDependencies(routeInfo)
+
+
