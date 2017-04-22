@@ -61,8 +61,9 @@ Each route entry has 4 distinct properties:
 
 
 These are the basic properties that wilson reads and uses from the route entries. Without adding any option support, an
-application can perform simple routing from page to page with changing titles. Note that **title** may template in
-any params in the **path** property using [lodash templating syntax](https://lodash.com/docs/4.17.4#template).
+application can perform simple routing from page to page with changing titles. 
+
+> Note that **title** may be templated with dynamic content using the [translateTitle()](#translateTitle) method, covered below.
 
 The **options** property provides a blank canvas for applications to build intricate routing functionality. Using these 
 properties in conjunction with the IRouteService interface, developers can create new routing constructs as they desire.
@@ -92,9 +93,9 @@ Example route entry with options:
 }
 ```
 
-Note the **loggedOutRedirect** options property. Let's assume this property should do exactly what it sounds like it should do- 
-redirect a user without a session to the "/login" route. This functionality can easily be implemented via IRouteService's 
-[**handleRouteChange()**](#handleRouteChange) method.
+Note the **loggedOutRedirect** options property. Let's assume this property should do exactly what it sounds like it should do: 
+redirect a user without a session to "/login". This functionality can easily be implemented via IRouteService's 
+[handleRouteChange()](#handleRouteChange) method.
 
 Example handling in IRouteService:
 ```js
@@ -116,10 +117,10 @@ wilson.service('IRouteService', ['$q', '$location', 'AuthService',
     // Return service
     return { handleRouteInfo: handleRouteInfo };
   }
-])
+]);
 ```
 
-As you can see in the example, the handleRouteChange method has access to routeOptions (the options object 
+As you can see in the example, the **handleRouteChange** method has access to routeOptions (the options object 
 from the current route). IRouteService can inject other application services and use custom logic to support
 any number of specialized functionalities like the one above.
 
@@ -136,11 +137,11 @@ any number of specialized functionalities like the one above.
 
 ## <a name="handleRouteChange"></a>handleRouteChange(currentRoute, routeOptions, routeInfo)
 
-Handles application logic before a route change is fulfilled. Returns a promise that will
-determines whether routing continues or is cancelled. A resolved promise means routing should
+Handles application logic before a route change is fulfilled. Returns a promise that
+determines whether routing may continue. A resolved promise means routing should
 continue normally, a rejected promise will stop the current route from completing.
 
-This method accepts three important params:
+This method accepts three parameters:
 
 * *currentRoute* - The URL path of the current route
 * *routeOptions* - All data and options properties from the current route
@@ -155,7 +156,7 @@ wilson.service('IRouteService', ['$q', '$location',
   function($q, $location) {
     
     function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
-      
+ 
       if (routeOptions.forward) {
         $location.replace();
         $location.path(routeOptions.forward);
@@ -168,10 +169,119 @@ wilson.service('IRouteService', ['$q', '$location',
     // Return service
     return { handleRouteInfo:  handleRouteInfo };
   }
-])
+]);
 ```
 
 
 ## <a name="loadDependencies"></a>loadDependencies(routeInfo)
 
+Handles the loading of any required dependencies before a route change is fulfilled. Returns a promise that
+determines whether routing may continue. A resolved promise means routing should continue normally, a rejected promise
+will stop the current route from completing.
 
+This method accepts one parameters:
+
+* *routeInfo* - The full route config entry for the current route
+ 
+```typescript
+function loadDependencies(routeInfo: Object): Promise;
+```
+Implementation Example:
+```js
+wilson.service('IRouteService', ['$q', 
+  function($q) {
+    
+    function loadDependencies(routeInfo) {
+      var promises = [];
+      
+      // Iterate over an optional special property "jsDependencies" (a list of required js scripts)
+      _.each(routeInfo.options.jsDependencies, function(scriptPath) {
+        var jsPromise = $q.defer();
+ 
+        $.getScript(scriptPath).done(jsPromise.resolve).fail(jsPromise.reject);
+         
+        promises.push(jsPromise.promise);
+      });
+      
+      return $q.all(promises);    // Resolves only if all script promises are resolved 
+    }
+    
+    // Return service
+    return { loadDependencies:  loadDependencies };
+  }
+]);
+```
+
+## <a name="loadSession"></a>loadSession()
+
+Handles the loading of any session-related data before a route change is fulfilled. Returns a promise that
+determines whether routing may continue. A resolved promise means routing should continue normally, a rejected promise
+will stop the current route from completing.
+
+```typescript
+function loadSession(): Promise;
+```
+Implementation Example:
+```js
+wilson.service('IRouteService', ['$q', 'AuthService', 
+  function($q, AuthService) {
+    
+    function loadSession() {
+      
+      if (!AuthService.hasSession()) {
+        return AuthService.provisionSession();    // Returns a promise to create a session
+      }
+      
+      return $q.when();   // We already have a session so we can resolve
+    }
+    
+    // Return service
+    return { loadSession:  loadSession };
+  }
+]);
+```
+
+## <a name="getTitleText"></a>getTitleText(routeTitle)
+
+Handles the creation of the title text that will be used for the current route. Returns a string that will be used
+as the page title for the route. This method may be used to transform, template or internationalize title text into a 
+finalized string.
+
+> Note: Unlike the other methods, getTitleText is synchronous and must return a string.
+
+```typescript
+function getTitleText(routeTitle: string): string;
+```
+Implementation Example (Basic):
+```js
+wilson.service('IRouteService', [ 
+  function() {
+    
+    function getTitleText(routeTitle) {
+      return routeTitle;  // Just return the title string included in the route entry (no alterations)                 
+    }
+    
+    // Return service
+    return { getTitleText:  getTitleText };
+  }
+]);
+```
+Implementation Example (Advanced):
+```js
+wilson.service('IRouteService', ['$route',
+  function($route) {
+    
+    function getTitleText(routeTitle) {
+      var titleText = 'Default Title Here';
+      
+      // Attempt to template the routeTitle using lodash 
+      try { titleText = _.template(routeTitle)($route.current.params); } catch(e);
+      
+      return titleText;                  
+    }
+    
+    // Return service
+    return { getTitleText:  getTitleText };
+  }
+]);
+```
