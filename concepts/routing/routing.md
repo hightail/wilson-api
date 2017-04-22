@@ -69,7 +69,7 @@ properties in conjunction with the IRouteService interface, developers can creat
  
 # IRouteService
 
-Every wilson application is required to implement a special service call IRouteService. This service is used at specific
+Every wilson application is required to implement a special service called IRouteService. This service is used at specific
 points during wilson routing to determine how/when to proceed with route fulfillment. This allows the application to control
 things like restricted routes, path forwarding, dependency resolution, session-based redirections and much more.
 
@@ -92,7 +92,7 @@ Example route entry with options:
 }
 ```
 
-Note the **loggedOutRedirect" options property. Let's assume this property should do exactly what it sounds like it should do- 
+Note the **loggedOutRedirect** options property. Let's assume this property should do exactly what it sounds like it should do- 
 redirect a user without a session to the "/login" route. This functionality can easily be implemented via IRouteService's 
 [**handleRouteChange()**](#handleRouteChange) method.
 
