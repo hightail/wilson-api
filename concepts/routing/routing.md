@@ -17,7 +17,7 @@ components see the [detailed wilson component api](../components/components.md)
 > Under-the-hood, wilson uses the standard angularjs [ngRoute](https://docs.angularjs.org/api/ngRoute) module. For more
 > detailed information about angularjs routing see the [$routeProvider documentation](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider).
   
-# Route Definition
+## Route Definition
 
 All routes for wilson apps must be declared in a external json file. By default the wilson server application looks for
 routes in "/client/routing.json" (this is configurable on the server via the property **server.projectPaths.routes**). These
@@ -48,7 +48,7 @@ for any non-matched route (effectively 404 Not Found). Wilson will throw an erro
 a null route in the config or if the null route is not the final route entry.
 
 
-### Route Entries
+## Route Entries
 
 Each route entry has 4 distinct properties:
 
@@ -57,5 +57,18 @@ Each route entry has 4 distinct properties:
 | **path**         | string   | The URL path, see angularjs [$routeProvider.when()](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) |
 | **component**    | string   | The name of the target component for this route |
 | **title**        | string   | The html title to use for this page (i.e. <title>...</title>) |
-| **options**      | Object   | An object representing an optional data used to provide extra functionality |
+| **options**      | Object   | An object with optional data used to provide extra functionality |
 
+
+These are the basic properties that wilson reads and uses from the route entries. Without adding any option support, an
+application can perform simple routing from page to page with changing titles. Note that **title** may template in
+any params in the **path** property using [lodash templating syntax](https://lodash.com/docs/4.17.4#template).
+
+The **options** property provides a blank canvas for applications to build intricate routing functionality. Using these 
+properties in conjunction with the IRouteService interface, developers can create new routing constructs as they desire.
+ 
+## IRouteService Interface
+
+Every wilson application is required to implement a special service call IRouteService. This service is used at specific
+points during wilson routing to determine how/when to proceed with route fulfillment. This allows the application to control
+things like restricted routes, path forwarding, session-based redirections and much more. IRouteService
