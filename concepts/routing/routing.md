@@ -258,7 +258,7 @@ wilson.service('IRouteService', [
   function() {
     
     function getTitleText(routeTitle) {
-      return routeTitle;  // Just return the title string included in the route entry (no alterations)                 
+      return routeTitle;  // Just return the title string included in the route entry                
     }
     
     // Return service
