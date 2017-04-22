@@ -13,6 +13,9 @@ to initially load the application and removes development concern as a codebase 
 
 Routing is dependent on the use of a wilson component as the target of any given route. For more information on wilson
 components see the [detailed wilson component api](../components/components.md)
+
+> Under-the-hood, wilson uses the standard angularjs [ngRoute](https://docs.angularjs.org/api/ngRoute) module. For more
+> detailed information about angularjs routing see the [$routeProvider documentation](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider).
   
 # Route Definition
 
@@ -43,4 +46,16 @@ Example routing.json
 It is important to note that this file must include a null route as its final route entry. This is used as a catch-all
 for any non-matched route (effectively 404 Not Found). Wilson will throw an error upon bootstrapping if it does not find
 a null route in the config or if the null route is not the final route entry.
+
+
+### Route Entries
+
+Each route entry has 4 distinct properties:
+
+|     Property     |   Type   |     Description      |
+| ---------------- |:--------:| -------------------- |
+| **path**         | string   | The URL path, see angularjs [$routeProvider.when()](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) |
+| **component**    | string   | The name of the target component for this route |
+| **title**        | string   | The html title to use for this page (i.e. <title>...</title>) |
+| **options**      | Object   | An object representing an optional data used to provide extra functionality |
 
