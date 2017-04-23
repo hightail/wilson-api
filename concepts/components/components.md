@@ -4,6 +4,58 @@ Components are the heart of a wilson application. They are custom elements that 
 of functionality that can be re-used as needed. Components can represent a page (the target 
 of a route) or a building-block that is used to as a distinct piece of a user interface. 
 
+There are 3 important pieces that make up a wilson component:
+
+* *The template*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- The HTML markup that defines the content (including sub-component usage)
+* *The controller*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- The javascript "control" (code-behind) for the template
+* *The style definition*&nbsp;- The visual treatment of the component markup
+
+Example component:
+
+**nav-bar.html**
+```html
+<div class="nav-bar">
+  <ul class="tabs">
+    <li ng-repeat="opt in navOptions" class="tab" ng-click="navigate(opt.target)">[[opt.name]]</li>
+  </ul>
+</div>
+```
+**nav-bar.js**
+```js
+wilson.component('nav-bar', {
+  controller: ['$scope', '$location', function($scope, $location) {
+    var controller = this;
+    
+    $scope.navOptions = [
+      { name: 'Home',       target: '/home'       },
+      { name: 'Dashboard',  target: '/dashboard'  },
+      { name: 'Settings',   target: '/settings'   }
+    ];
+    
+    $scope.navigate = function navigate(targetPath) {
+      $location.path(targetPath);
+    };
+    
+  }]
+});
+```
+**nav-bar.scss**
+```scss
+.nav-bar {
+  position: fixed;
+  top: 0; right: 0; left: 0;
+  height: 50px;
+  
+  ul {
+    li { display: inline-block; }
+  }
+}
+```
+
+> NOTE: In the markup template notice the "[[]]" syntax. Wilson changes the interpolation symbols to square brackets instead
+> of braces. This is to support internationalization templating on the backend. If you run into issues with templated content
+> Just remember that all bindings should use square brackets in order to work in wilson.
+
 Under-the-hood, a component is just an angularjs "element-style" directive that has isolateScope and defines
 an explicit controller ([see angularjs components](https://docs.angularjs.org/guide/component)). 
 
@@ -63,9 +115,58 @@ The scope of this component's parent wilson component (aka it's containing compo
 ```typescript
 parentComponent: Object;
 ```
-Example:
+Usage Example:
 
-// TODO
+**todo-list component (parent)**
+
+todo-list.html
+```html
+<div class="todo-list">
+  <ul>
+    <li ng-repeat="todo in todoList">
+      <ht-todo todo="todo"></ht-todo>     <!-- Assume we are using "ht" as our component prefix -->
+    </li>
+  </ul>
+</div>
+```
+todo-list.js
+```js
+wilson.component('todo-list', {
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    $scope.todoList = [{ name: 'Go to the store' }, { name: 'Make Dinner' }, { name: 'Walk the dog'}];
+  }]
+});
+```
+
+**todo component (child)**
+
+todo.html
+```html
+<div class="todo">
+  <h3>[[name]]</h3>
+  <button ng-click="markComplete()">mark complete</button>
+</div>
+```
+todo.js
+```js
+wilson.component('todo', {
+  scope: {
+    todo: '=todo'
+  },
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    $scope.markComplete = function markComplete() {
+      $scope.todo.complete = true;
+    };
+    
+    wilson.log.info($scope.parentComponent);            // --> This is the todo-list component $scope
+    wilson.log.info($scope.parentComponent.todoList);   // --> [{ name: 'Go to the store }, ...]
+  }]
+});
+```
 
 
 ## <a name="stateMachine"></a>$scope.stateMachine
