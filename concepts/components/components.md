@@ -130,7 +130,7 @@ wilson.component('my-component', {
 });
 ```
 
-## <a name="bindToDigest"></a>bindToDigest(method, context)
+## <a name="bindToDigest"></a>$scope.bindToDigest(method, context)
 
 Binds a given function to a digest cycle trigger. This method returns a new function that invokes the original function 
 and then triggers a digest cycle. This is useful if for out-of-context event handlers that update bound data references.
@@ -336,7 +336,7 @@ wilson.component('dashboard', {
 
 Setup a bindable stateMachine on the component $scope. Uses the [javascript-state-machine library](https://github.com/jakesgordon/javascript-state-machine) to create
 a state-based control concept for a component. This method takes a specific configuration object unique to the 
-the [StateMachine.create()](https://github.com/jakesgordon/javascript-state-machine#usage) method of javascript-state-machine.
+[StateMachine.create()](https://github.com/jakesgordon/javascript-state-machine#usage) method of javascript-state-machine.
 
 ```typescript
 function setState(config: Object, callback: Function): void;
@@ -380,11 +380,11 @@ wilson.component('dashboard', {
   }]
 });
 ```
-Wilson supports an extended set of options for state machines. Specifically the timeouts array mentioned in the
+Wilson supports an extended set of options for state machines. Specifically the **timeouts** array shown in the
 example above. The **timeouts** options allows for an array of time-based state transitions that are automatically
-controlled by the state machine itself. 
+controlled by the stateMachine object itself. 
 
-Example state machine definition:
+Example stateMachine definition:
 ```js
 controller.setState({
   initial: 'Loading',
@@ -410,6 +410,48 @@ Each entry of the timeouts array supports 4 properties:
 | **refreshEvent** | no           | An event that will reset the timeout if not yet completed |
 
 
+# Component Controller Events
+
+The component controller interface contains a special set of event handlers under the **auto** sub-property.
+These methods provide the same functionality as the original handling methods, but are auto cleaned up when
+the scope of the component is destroy. This allows developers to use them freely without having to worry about
+memory/reference management.
+
+## <a name="autoOn"></a>controller.auto.on(eventName, handler)
+
+Alias for $scope.$on. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$on).
+
+```typescript
+function on(eventName: string, handler: Function): void;
+```
+
+## <a name="autoWatch"></a>controller.auto.watch(key, handler)
+
+Alias for $scope.$watch. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch).
+
+```typescript
+function watch(key: string, handler: Function): void;
+```
+
+## <a name="autoAdd"></a>controller.auto.add(signal, handler)
+
+Alias for signal.add. See [js-signal documentation](http://millermedeiros.github.io/js-signals/docs/symbols/Signal.html#add).
+
+```typescript
+function add(signal: Signal, handler: Function): void;
+```
+
+> EXPLAINED: This method attaches the **handler** to the **signal** by calling the signal.add.
+
+## <a name="autoAfterDigest"></a>controller.auto.afterDigest(handler)
+
+Run the given handler after each digest cycle completes.
+
+```typescript
+function afterDigest(handler: Function): void;
+```
+
+
 # Advanced Component Features
 
 Wilson provides a few additional features on its components that allow for advanced component
@@ -417,4 +459,8 @@ interactions. These features are designed to give flexibility to developers when
 way to structure their code.
 
 ## The expose attribute
+
+## Dependency hooks
+
+
 
