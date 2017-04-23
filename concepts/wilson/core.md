@@ -220,7 +220,7 @@ app config. Any config-type data that an application requires during runtime can
 config up-front, and will then be accessible via the global wilson instance from anywhere.
 
 The wilson server instance ultimately sets most of the values on the config upon serving it to the browser. Although
-there is a method available to setAppConfig directly on the wilson instance, the config is pre-set when the config
+there is a method available to [setAppConfig](#setAppConfig) directly on the wilson instance, the config is pre-set when the config
 module is fetched from the server (required as the first step of wilson bootstrapping).
 
 Example Config:
