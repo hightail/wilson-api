@@ -122,7 +122,7 @@ Example Parent:
 <div class="todo-list">
   <ul>
     <li ng-repeat="todo in todoList">
-      <ht-todo todo="todo"></ht-todo>     <!-- Assume we are using "ht" as our component prefix -->
+      <ht-todo todo="todo"></ht-todo>     <!-- Assume  "ht" is our component prefix -->
     </li>
   </ul>
 </div>
@@ -566,7 +566,7 @@ Example:
 **dashboard.html**
 ```html
 <div class="dashboard">
-  <ht-news-feed expose="newsFeed"></ht-news-feed>     <!-- Assume we are using "ht" as our component prefix -->
+  <ht-news-feed expose="newsFeed"></ht-news-feed>     <!-- Assume "ht" is our component prefix -->
 </div>
 ```
 **dashboard.js**
