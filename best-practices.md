@@ -6,7 +6,7 @@ aid developers as applications grow in size and complexity.
 
 ## Components
 
-1 *Definitions should follow the same property ordering for each component*
+**1 *Definitions should follow the same property ordering for each component***
 
 This is the recommended pattern:
 
@@ -23,7 +23,7 @@ wilson.component('my-component', {
 > maintain this recommended ordering.
 
 
-2 *Avoid using "this" to reference a controller instance. Store a local "controller" reference.*
+**2 *Avoid using "this" to reference a controller instance. Store a local "controller" reference.***
 
 This makes access to the controller instance very explicit. It also keeps consistency with the
 "controller" parameter in the **link** method. This "controller" reference should be declared as the
@@ -37,7 +37,7 @@ wilson.component('my-component', {
 });
 ```
 
-3 *Declare explicit function names for all $scope and controller functions*
+**3 *Declare explicit function names for all $scope and controller functions***
 
 This makes debugging much easier for the developer. If an error prints to the console, the 
 stack trace will have a function name to point out where the problem occurred. Without it the 
@@ -61,7 +61,7 @@ wilson.component('my-component', {
 
 ## Services
 
-1 *Service object interfaces should be at the bottom of each service*
+**1 *Service object interfaces should be at the bottom of each service***
 
 This make the public interface for any service very easy to find. When a developer is looking for a function 
 inside of a service, they can simply look at the bottom of the file to find all methods that are publicly 
