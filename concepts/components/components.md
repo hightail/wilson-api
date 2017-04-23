@@ -24,7 +24,7 @@ special decorations are split between the $scope and the controller instance of 
 
 [See these decorations in ComponentFactoryService](https://github.com/hightail/wilson/blob/3.0.0/lib/client/src/services/ComponentFactoryService.js)
 
-# Component $scope decorations
+# $scope decorations
 
 * [componentCName](#componentCName)
 * [parentComponent](#parentComponent)
@@ -161,7 +161,7 @@ wilson.component('my-component', {
 > for demonstration purposes. In practice developers should use the $timeout service which will trigger a digest
 > by default
 
-# Component controller decorations
+# Controller decorations
 
 * [translate](#translate)
 * [overrideText](#overrideText)
@@ -302,7 +302,7 @@ wilson.component('dashboard', {
 ## <a name="watchAndPersist"></a>controller.watchAndPersist(key, defaultValue)
 
 Setup a $scope.$watch on the given key that stores the value to this component's localStorage namespace
-when the value changes. Use the defaultValue if watched value becomes falsey.
+when the value changes. Stores the defaultValue if the watched value becomes falsey.
 
 ```typescript
 function watchAndPersist(key: string, defaultValue: any): void;
@@ -381,7 +381,7 @@ wilson.component('dashboard', {
 });
 ```
 Wilson supports an extended set of options for state machines. Specifically the **timeouts** array shown in the
-example above. The **timeouts** options allows for an array of time-based state transitions that are automatically
+example above. The **timeouts** option allows for an array of time-based state transitions that are automatically
 controlled by the stateMachine object itself. 
 
 Example stateMachine definition:
@@ -400,7 +400,7 @@ controller.setState({
 })
 ```
 
-Each entry of the timeouts array supports 4 properties:
+Each timeout entry supports 4 properties:
 
 | Property         | Required     | Description                                               |
 | -------------    | ------------ | --------------------------------------------------------- |
@@ -410,7 +410,7 @@ Each entry of the timeouts array supports 4 properties:
 | **refreshEvent** | no           | An event that will reset the timeout if not yet completed |
 
 
-# Component Controller Events
+# Controller event handlers
 
 The component controller interface contains a special set of event handlers under the **auto** sub-property.
 These methods provide the same functionality as the original handling methods, but are auto cleaned up when
