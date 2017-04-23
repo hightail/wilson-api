@@ -313,7 +313,7 @@ to a "component".
 ## Tags Config
 
 The tags properties in the wilson config represent identifying information for the currently active client. This info 
-includes device-type, platform, browser, language and even branding. This means that client wilson applications to not 
+includes device-type, platform, browser, language and even branding. This means that client wilson applications do not 
 have to use javascript tactics to detect these characteristics, but can simply imply them from the global wilson config.
 
 
