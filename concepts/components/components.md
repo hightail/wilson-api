@@ -34,7 +34,7 @@ special decorations are split between the $scope and the controller instance of 
 * [bindToDigest](#bindToDigest)
 
 
-## <a name="componentCName"></a>componentCName
+## <a name="componentCName"></a>$scope.componentCName
 
 A string representing the name of the component. This is the same name that is used in the component
 declaration.
@@ -53,7 +53,7 @@ wilson.component('nav-bar', {
 });
 ```
 
-## <a name="parentComponent"></a>parentComponent
+## <a name="parentComponent"></a>$scope.parentComponent
 
 The scope of this components parent wilson component (aka its containing component). This gives components access
 (if necessary) to the scope of their parent.
@@ -67,7 +67,7 @@ Example:
 
 // TODO
 
-## <a name="defaultValue"></a>defaultValue(scopePropertyName, defaultValue)
+## <a name="defaultValue"></a>$scope.defaultValue(scopePropertyName, defaultValue)
 
 Assign a default value to a scope field if it is not set. Useful for optional scope bindings so that
 a default value is assigned to the property.
@@ -90,7 +90,7 @@ wilson.component('nav-bar', {
 });
 ```
 
-## <a name="triggerDigest"></a>triggerDigest()
+## <a name="triggerDigest"></a>$scope.triggerDigest()
 
 Triggers an angular digest cycle. This method will not throw an exception if a digest is in progress (in the event that a
 digest is in progress, another will be triggered). This method returns a promise that will be called after the digest.
