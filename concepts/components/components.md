@@ -558,7 +558,7 @@ give flexibility to developers when determining the best way to structure their 
 ## The expose attribute
 
 Each component supports a special html attribute called "expose". This attribute can be applied to a component when it is
-used in a template and must be supplied a property name as the attribute value. Once applied, the sub-component will 
+used in a template and must be supplied a property name as the attribute value. When applied, the sub-component will 
 decorate its $scope onto the parent component $scope at the specified property.
 
 Example:
