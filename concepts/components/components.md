@@ -74,7 +74,7 @@ ensures that each component has the same base interface and gives the developer 
 common functions and utilities, which helps to eliminate boiler plate and code duplication. These 
 special decorations are split between the $scope and the controller instance of a component.  
 
-[See these decorations in ComponentFactoryService](https://github.com/hightail/wilson/blob/3.0.0/lib/client/src/services/ComponentFactoryService.js)
+[See the code in ComponentFactoryService](https://github.com/hightail/wilson/blob/3.0.0/lib/client/src/services/ComponentFactoryService.js)
 
 # $scope decorations
 
@@ -115,11 +115,9 @@ The scope of this component's parent wilson component (aka it's containing compo
 ```typescript
 parentComponent: Object;
 ```
-Usage Example:
+Example Parent:
 
-**todo-list component (parent)**
-
-todo-list.html
+**todo-list.html**
 ```html
 <div class="todo-list">
   <ul>
@@ -129,7 +127,7 @@ todo-list.html
   </ul>
 </div>
 ```
-todo-list.js
+**todo-list.js**
 ```js
 wilson.component('todo-list', {
   controller: ['$scope', function($scope) {
@@ -139,17 +137,16 @@ wilson.component('todo-list', {
   }]
 });
 ```
+Example Child:
 
-**todo component (child)**
-
-todo.html
+**todo.html**
 ```html
 <div class="todo">
   <h3>[[name]]</h3>
   <button ng-click="markComplete()">mark complete</button>
 </div>
 ```
-todo.js
+**todo.js**
 ```js
 wilson.component('todo', {
   scope: {
