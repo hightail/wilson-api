@@ -67,8 +67,7 @@ as lazily-loaded javascript content is added during navigation.
 
 ## Wilson Best Practices
 
-There are several constructs in wilson that can be used. Wilson application developers are encouraged to use
-a few specific best practices that help apps stay organized and increase readability.
+Wilson application developers are encouraged to use a few specific best practices that help apps stay organized and increase readability.
 
 [View Wilson Best Practice Guide](./best-practices.md)
 
