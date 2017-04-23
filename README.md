@@ -63,3 +63,27 @@ as lazily-loaded javascript content is added during navigation.
 4. [Routing](./concepts/routing/routing.md)
 5. [Utility Functions](./concepts/utilities/utilities.md)
 6. [Logging](./concepts/logging/logging.md)
+
+
+## Wilson Best Practices
+
+There are several constructs in wilson that can be used. Wilson application developers are encouraged to use
+a few specific best practices that help apps stay organized and increase readability.
+
+[View Wilson Best Practice Guide](./best-practices.md)
+
+## Third-party Resources
+
+Wilson uses a handful of third-party javascript libraries for different constructs and utility. Many of them are referenced
+in the wilson concept sections of this documentation. Having a good handle on these technologies is absolutely recommended and
+in many cases required for wilson developers. Here is a high-level list of technologies with links to their documentation.
+
+| Library                                                                                 | Usage                                                                    |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [**Angularjs**](https://docs.angularjs.org/guide)                                       | The underlying framework for wilson applications                         |
+| [**jQuery**](http://api.jquery.com/)                                                    | Extends the basic angularjs jqLite to jQuery proper                      |
+| [**Lodash**](https://lodash.com/docs/4.17.4)                                            | Utility functions used to simplify code and promote self-documentation   |
+| [**i18next**](https://github.com/i18next/i18next/tree/2.2.0)                            | Support for string internationalization                                  |
+| [**js-signals**](https://millermedeiros.github.io/js-signals/)                          | Special eventing construct for services and components                   |
+| [**javascript-state-machine**](https://github.com/jakesgordon/javascript-state-machine) | State machine control construct for components                           |
+
