@@ -552,13 +552,99 @@ function afterDigest(handler: Function): void;
 
 # Advanced Component Features
 
-Wilson provides a few additional features on its components that allow for advanced component
-interactions. These features are designed to give flexibility to developers when determining the best
-way to structure their code.
+Wilson provides a few additional features on its components that allow for advanced use cases. These features are designed to 
+give flexibility to developers when determining the best way to structure their code and optimize loading times.
 
 ## The expose attribute
 
+Each component supports a special html attribute called "expose". This attribute can be applied to a component when it is
+used in a template and must be supplied a property name as the attribute value. Once applied, the sub-component will 
+decorate its $scope onto the parent component $scope at the specified property.
+
+Example:
+
+**dashboard.html**
+```html
+<div class="dashboard">
+  <ht-news-feed expose="newsFeed"></ht-news-feed>     <!-- Assume we are using "ht" as our component prefix -->
+</div>
+```
+**dashboard.js**
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', '$timeout', function($scope, $timeout) {
+    var controller = this;
+    
+    wilson.log.info($scope.newsFeed);           // --> This will be null at construction time (since parents load prior to children)
+    
+    $timeout(function() {
+      wilson.log.info($scope.newsFeed.feed);    // --> [{ id: '1234', title: 'Stocks up 20%' }]  - referenced from news-feed's $scope
+    });
+  }]
+});
+```
+**news-feed.js**
+```js
+wilson.component('news-feed', {
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    $scope.feed = [{ id: '1234', title: 'Stocks up 20%' }];
+  }]
+});
+```
+
+In our example above, the news-feed component decorates its $scope onto dashboard as **newsFeed**. This allows the
+dashboard component to access the $scope of its child at runtime. 
+
+The expose feature is very useful when building complex interaction models between components. It adds another dimension to
+how developers can structure their code while still decoupling concerns. Out-of-the-box angularjs architecture supports child to parent 
+$scope access, but not the other way around. Wilson adds this functionality knowing that there are times when this may be
+necessary to achieve a desirable solution.
+
 ## Dependency hooks
+
+Component controllers provide special hooks to optimize the loading of external scriptDependencies. Many times
+a component may need to use a special javascript library to provide its functionality. However, we may not want to add this library to
+the core application javascript and increase our load time...Enter wilson dependency hooks.
+
+Wilson allows the developer to specify scriptDependencies in a component definition and will fire hooks to the controller
+when those dependencies are ready.
+
+Take for example a dashboard component that needs to use **d3.js**. We only want the d3 library to load when we need to 
+instantiate the dashboard component.
+
+Example:
+
+**dashboard.js**
+```js
+wilson.component('dashboard', {
+  scriptDependencies: [
+    'https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js'
+  ],
+  controller: ['$scope', '$window', function($scope, $window) {
+    var controller = this;
+    
+    $scope.showCharts = false;
+    
+    controller.onDependenciesReady = function() {       // Fires when dependency scripts are loaded and ready
+      $scope.showCharts = true;
+    };
+    
+    controller.onDependenciesError = function() {       // Fires if dependency scripts fail to load
+     $window.alert('Sorry we don\'t have what we need to load');
+    };
+    
+  }]
+});
+```
+If scriptDependencies are defined and non-empty, wilson will attempt to load the scripts when the component is instantiated. The 
+controller may then implement the **onDependenciesReady** and **onDependenciesError** methods in order to handle the
+hooks fired by wilson.
+
+> NOTE: Template content that requires the use of scriptDependencies should be manually prevented from rendering prior
+> to the **onDependenciesReady** hook. In the example above, $scope.showCharts is meant to represent a flag that controls
+> the d3-dependent markup using ng-if="showCharts".
 
 
 
