@@ -55,10 +55,10 @@ wilson.component('nav-bar', {
 
 ## <a name="parentComponent"></a>$scope.parentComponent
 
-The scope of this components parent wilson component (aka its containing component). This gives components access
-(if necessary) to the scope of their parent.
+The scope of this component's parent wilson component (aka it's containing component). This gives components access
+(if necessary) to the scope of their parent. If this is a page-level component parentComponent will be null.
 
-> Important Note: **parentComponent** is not necessarily the direct parent $scope, but the $scope of the parent wilson component.
+> IMPORTANT: **parentComponent** is not necessarily the direct parent $scope, but the $scope of the parent wilson component.
 
 ```typescript
 parentComponent: Object;
@@ -66,6 +66,19 @@ parentComponent: Object;
 Example:
 
 // TODO
+
+
+## <a name="stateMachine"></a>$scope.stateMachine
+
+A special stateMachine object that can be used to add state-based control to a component. Uses the 
+[javascript-state-machine library](https://github.com/jakesgordon/javascript-state-machine). 
+
+```typescript
+stateMachine: Object;
+```
+
+See details below for the [setState() method](#setState).
+
 
 ## <a name="defaultValue"></a>$scope.defaultValue(scopePropertyName, defaultValue)
 
@@ -99,17 +112,64 @@ digest is in progress, another will be triggered). This method returns a promise
 function triggerDigest(): Promise;
 ```
 Usage Example:
+```js
+wilson.component('my-component', {
+  controller: ['$scope', function($scope) {
+    
+    $scope.message = 'Hello';
+    
+    function updateMessage(msg) {     // Note this is a private non-scope method
+      $scope.message = msg;
+    }
+        
+    setTimeout(function() {
+      updateMessage('World');   // --> Function updates message but will not trigger a digest automatically
+      $scope.triggerDigest();   // --> Triggers the digest cycle and the updated message is now propagated to the view  
+    }, 2000);
+  }]
+});
+```
 
+## <a name="bindToDigest"></a>bindToDigest(method, context)
+
+Binds a given function to a digest cycle trigger. This method returns a new function that invokes the original function 
+and then triggers a digest cycle. This is useful if for out-of-context event handlers that update bound data references.
+
+```typescript
+function bindToDigest(method: Function, context: any): Function;
+```
+
+Usage Example:
+```js
+wilson.component('my-component', {
+  controller: ['$scope', function($scope) {
+    
+    $scope.message = 'Hello';
+    
+    var updateMessage = $scope.bindToDigest(function(msg) {
+      $scope.message = msg;
+    });
+        
+    setTimeout(function() {
+      updateMessage('World');   // --> Updates message and triggers a digest cycle - changes are propagated to the view 
+    }, 2000);
+  }]
+});
+```
+
+> NOTE: The examples above for triggerDigest and bindToDigest both use the setTimeout method, this is simply 
+> for demonstration purposes. In practice developers should use the $timeout service which will trigger a digest
+> by default
 
 # Component controller decorations
 
 * [translate](#translate)
 * [overrideText](#overrideText)
-* [setState](#setState)
 * [getPersistentValue](#getPersistentValue)
 * [setPersistentValue](#setPersistentValue)
 * [setPersistentValues](#setPersistentValues)
 * [watchAndPersist](#watchAndPersist)
+* [setState](#setState)
 * [auto.on](#autoOn)
 * [auto.add](#autoAdd)
 * [auto.watch](#autoWatch)
@@ -117,7 +177,7 @@ Usage Example:
 
 
 
-## <a name="translate"></a>translate(text, options)
+## <a name="translate"></a>controller.translate(text, options)
 
 Translate a text string using the i18next service. Used for internationalizing dynamic strings
 during run-time of the application. Accepts the original text and returns a translated string.
@@ -139,7 +199,7 @@ wilson.component('my-component', {
 });
 ```
 
-## <a name="overrideText"></a>overrideText(overrideNamespace, textKey, overrideText)
+## <a name="overrideText"></a>controller.overrideText(overrideNamespace, textKey, overrideText)
 
 Add an override translation mapping for a component namespace. Used for detailed customization of i18n strings
 in a specific context.
@@ -162,6 +222,193 @@ wilson.component('my-component', {
   }]
 });
 ```
+
+## <a name="getPersistentValue"></a>controller.getPersistentValue(key, defaultValue)
+
+Retrieve a value from this component's localStorage namespace at a given key. If the value does not exist
+return the specified defaultValue, otherwise return null.
+
+```typescript
+function getPersistentValue(key: string, defaultValue: any): any;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);                         // --> "list-view"
+    
+    controller.setPersistentValue('viewMode', 'grid-view');   // --> sets 'viewMode' to local storage
+    
+    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);                         // --> "grid-view"
+  }]
+});
+```
+
+## <a name="setPersistentValue"></a>controller.setPersistentValue(key, value)
+
+Store a value to this component's localStorage namespace at a given key. This will persist in the browser
+indefinitely and will be retained when the browser is refreshed or even closed.
+
+```typescript
+function setPersistenValue(key: string, value: any): any;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    controller.setPersistentValue('viewMode', 'grid-view');
+    
+    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);   // --> "grid-view"
+  }]
+});
+```
+
+## <a name="setPersistentValues"></a>controller.setPersistentValues(obj)
+
+Store a set of key/values to this component's localStorage namespace. Returns an object that
+contains all stored key/values for this component's namespace. This will persist in the browser
+indefinitely and will be retained when the browser is refreshed or even closed.
+
+```typescript
+function setPersistentValues(obj: Object): Object;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', function($scope) {
+    var controller = this;
+    
+    controller.setPersistentValues({ viewMode: 'grid-view', welcomeMessage: 'Hello World' });
+    
+    $scope.viewMode       = controller.getPersistentValue('viewMode');
+    $scope.welcomeMessage = controller.getPersistentValue('welcomeMessage');
+    
+    wilson.log.info($scope.viewMode);         // --> "grid-view"
+    wilson.log.info($scope.welcomeMessage);   // --> "Hello World"
+  }]
+});
+```
+
+## <a name="watchAndPersist"></a>controller.watchAndPersist(key, defaultValue)
+
+Setup a $scope.$watch on the given key that stores the value to this component's localStorage namespace
+when the value changes. Use the defaultValue if watched value becomes falsey.
+
+```typescript
+function watchAndPersist(key: string, defaultValue: any): void;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', '$timeout', function($scope, $timeout) {
+    var controller = this;
+    
+    $scope.message = 'Hello';
+    
+    controller.watchAndPersist('message', 'Foo');   // Start the watch
+    
+    $scope.updateMessage = function updateMessage(message) {
+      $scope.message = message;
+    };
+    
+    $scope.updateMessage('World');    // Update the message - this will trigger the watch
+    
+    $timeout(function() {
+      var storedMessage = controller.getPersistentValue('message');
+      
+      wilson.log.info(storedMessage);   // --> "World"  - The message will be set in localStorage
+    })
+  }]
+});
+```
+
+## <a name="setState"></a>controller.setState(config, callback)
+
+Setup a bindable stateMachine on the component $scope. Uses the [javascript-state-machine library](https://github.com/jakesgordon/javascript-state-machine) to create
+a state-based control concept for a component. This method takes a specific configuration object unique to the 
+the [StateMachine.create()](https://github.com/jakesgordon/javascript-state-machine#usage) method of javascript-state-machine.
+
+```typescript
+function setState(config: Object, callback: Function): void;
+```
+Usage Example:
+
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', '$timeout', function($scope, $timeout) {
+    var controller = this;
+    
+    $scope.message = 'Please Wait...';
+    
+    // Setup the stateMachine
+    controller.setState({
+      initial: 'Loading',
+      events:  [
+        { name: 'loaded', from: 'Loading', to: 'Ready'  },
+        { name: 'failed', from: 'Loading', to: 'Failed' }
+      ],
+      timeouts: [],   // this property timeouts is a wilson extended option
+      callbacks: {
+        onEnterReady: function() {
+          $scope.message = 'Dashboard Ready';
+        },
+        onEnterFailed: function() {
+          $scope.message = 'Dashboard Failed';
+        }
+      }
+    });
+    
+    $timeout(function() {
+      $scope.stateMachine.loaded();
+      
+      wilson.log.info($scope.stateMachine.current); // --> "Ready"
+      wilson.log.info($scope.message);              // --> "Dashboard Ready"
+    });
+     
+    wilson.log.info($scope.stateMachine.current);   // --> "Loading"
+    wilson.log.info($scope.message);                // --> "Please Wait..."
+  }]
+});
+```
+Wilson supports an extended set of options for state machines. Specifically the timeouts array mentioned in the
+example above. The **timeouts** options allows for an array of time-based state transitions that are automatically
+controlled by the state machine itself. 
+
+Example state machine definition:
+```js
+controller.setState({
+  initial: 'Loading',
+  events:  [
+    { name: 'loaded', from: 'Loading', to: 'Ready'    },
+    { name: 'failed', from: 'Loading', to: 'Failed'   },
+    { name: 'retry',  from: 'Failed',  to: 'Loading'  }
+  ],
+  timeouts: [
+    { state: 'Failed', duration: 3000, timeoutEvent: 'retry', refreshEvent: 'failed' }
+  ],
+  callbacks: {}
+})
+```
+
+Each entry of the timeouts array supports 4 properties:
+
+| Property         | Required     | Description                                               |
+| -------------    | ------------ | --------------------------------------------------------- |
+| **state**        | yes          | The state that will trigger this timeout                  |
+| **duration**     | yes          | The timeout length in milliseconds                        |
+| **timeoutEvent** | yes          | The stateMachine event to fire when the timeout completes |
+| **refreshEvent** | no           | An event that will reset the timeout if not yet completed |
+
 
 # Advanced Component Features
 

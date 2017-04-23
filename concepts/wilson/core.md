@@ -358,7 +358,7 @@ setTimeout(function() {
 
 ## <a name="bindToDigest"></a>bindToDigest(method, context)
 
-Binds a given function to a digest cycle trigger. This method Returns a new function that invokes the original function 
+Binds a given function to a digest cycle trigger. This method returns a new function that invokes the original function 
 and then triggers a digest cycle. This is useful if for out-of-context event handlers that update bound data references.
 
 ```typescript
