@@ -22,6 +22,7 @@ wilson.component('my-component', {
 > There are more options available for components, but these are the most common and should
 > maintain this recommended ordering.
 
+___
 
 **2 *Avoid using "this" to reference a controller instance. Store a local "controller" reference.***
 
@@ -36,6 +37,7 @@ wilson.component('my-component', {
   }]
 });
 ```
+___
 
 **3 *Declare explicit function names for all $scope and controller functions***
 
