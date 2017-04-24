@@ -101,7 +101,7 @@ wilson.service('MyService', ['$rootScope', function($rootScope) {
   
   service.doSomethingElse = function doSomethingElse() {};
   
-  service.doALlTheThings  = function doAllTheThings() {};
+  service.doAllTheThings  = function doAllTheThings() {};
   
   return service;
 }]);
