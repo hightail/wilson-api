@@ -130,7 +130,7 @@ any number of specialized functionalities like the one above.
 * [handleRouteChange](#handleRouteChange)
 * [loadDependencies](#loadDependencies)
 * [loadSession](#loadSession)
-* [translateTitle](#translateTitle)
+* [getTitleText](#getTitleText)
 
 > Note that the examples below implement an IRouteService that has only the sample method. When
 > implementing an actual IRouteService, all of the methods below MUST be included on the service.
