@@ -24,7 +24,6 @@ Example component:
 ```js
 wilson.component('nav-bar', {
   controller: ['$scope', '$location', function($scope, $location) {
-    var controller = this;
     
     $scope.navOptions = [
       { name: 'Home',       target: '/home'       },
@@ -71,14 +70,14 @@ a component and start using it...Magic.
 
 Apart from dependency resolution, wilson also applies specialized base functionality onto each component. This
 ensures that each component has the same base interface and gives the developer access to
-common functions and utilities, which helps to eliminate boiler plate and code duplication. These 
-special decorations are split between the $scope and the controller instance of a component.  
+common functions and utilities, which helps to eliminate boiler plate and code duplication. Specifically, each
+component's $scope is decorated with a special interface that makes it a wilson component.
 
-[See the code in ComponentFactoryService](https://github.com/hightail/wilson/blob/3.0.0/lib/client/src/services/ComponentFactoryService.js)
+[See the code in ComponentFactoryService](https://github.com/hightail/wilson/blob/4.0.0/lib/client/src/services/ComponentFactoryService.js)
 
 # $scope decorations
 
-* [componentCName](#componentCName)
+* [component](#component)
 * [parentComponent](#parentComponent)
 * [stateMachine](#stateMachine)
 * [defaultValue](#defaultValue)
@@ -86,14 +85,20 @@ special decorations are split between the $scope and the controller instance of 
 * [bindToDigest](#bindToDigest)
 
 
-## <a name="componentCName"></a>$scope.componentCName
+## <a name="component"></a>$scope.component
 
-A string representing the name of the component. This is the same name that is used in the component
-declaration.
+An object representing the identification metadata of the component.
 
 ```typescript
-componentCName: string;
+component: object;
 ```
+Properties:
+```json
+{
+  "id": ""
+}
+```
+
 Usage Example:
 ```js
 wilson.component('nav-bar', {

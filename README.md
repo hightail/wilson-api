@@ -27,6 +27,8 @@ wilson.utility('MyUtility',       [..., function(...) { }]);
 wilson.class('MyClass',           [..., function(...) { }]);
  
 wilson.filter('MyFilter',         [..., function(...) { }]);
+
+wilson.router([..., function(...) { }]);
 ```
 
 Although this initial declaration is not specifically on the 'angular' global instance, under-the-hood, wilson
@@ -47,6 +49,8 @@ wilson.class()     ---> angular.factory()
 wilson.utility()   ---> angular.factory()
   
 wilson.filter()    ---> angular.filter()
+
+wilson.router()    ---> angular.factory()
 ```
 
 Wilson ensures that some base options provided to angular so that these constructs are represented appropriately, but as
