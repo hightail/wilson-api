@@ -4,7 +4,7 @@ Routing is a key area where wilson provides extended functionality to angular ap
 defined from a URL path to a controller and a template/templateUrl. This requires that all templates
 and controllers be declared on angular prior to routing. With wilson, routes are defined from a url path to a wilson
 component (angularjs element-style directive). At routing time, wilson determines all necessary dependencies needed to fulfill
-the route, loads all javascript and markup templates and then resolves the route and renders the routed component.
+the route, loads all javascript, markup templates and styles then resolves the route and renders the routed component.
 
 This gives wilson applications the ability to "code-split" their javascript and markup templates. Although the application 
 is a SPA, it does not need to load a monolithic javascript payload that contains the entire application. Rather, as the user navigates
@@ -28,9 +28,23 @@ Example routing.json
 {
   "routes": [
     {
-      "path":       "/",
-      "component":  "home",
-      "title":      "Home Page",
+      "path":           "/",
+      "component":      "home",
+      "title":          "Home Page",
+      "options":        {}
+    },
+    {
+      "path":           "/dashboard/:tabId",
+      "component":      "dashboard",
+      "title":          "Dashboard Page",
+      "preload":        true,
+      "options":        {}
+    },
+    {
+      "path":           "/dashboard/news",
+      "component":      "dashboard",
+      "title":          "Dashboard News Feed",
+      "defaultParams":  { "tabId": "news" },
       "options":    {}
     },
     {
@@ -50,14 +64,16 @@ a null route in the config or if the null route is not the final route entry.
 
 # Route Entries
 
-Each route entry has 4 distinct properties:
+Each route entry supports the following distinct properties:
 
 |     Property     |   Type   |     Description      |
 | ---------------- |:--------:| -------------------- |
-| **path**         | string   | The URL path, see angularjs [$routeProvider.when()](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) |
-| **component**    | string   | The name of the target component for this route |
-| **title**        | string   | The html title to use for this page (i.e. <title>...</title>) |
-| **options**      | Object   | An object with optional data used to provide extra functionality |
+| **path**           | string   | The URL path, see angularjs [$routeProvider.when()](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) |
+| **component**      | string   | The name of the target component for this route |
+| **title**          | string   | The html title to use for this page (i.e. <title>...</title>) |
+| **preload**        | boolean  | Whether or not this route content should be pre-loaded after first navigation |
+| **defaultParams**  | Object   | An object containing default route parameters that should be applied |
+| **options**        | Object   | An object with optional data used to provide extra functionality |
 
 
 These are the basic properties that wilson reads and uses from the route entries. Without adding any option support, an
@@ -65,17 +81,26 @@ application can perform simple routing from page to page with changing titles.
 
 > Note that **title** may be templated with dynamic content using the [translateTitle()](#translateTitle) method, covered below.
 
+The **preload** property allows designated route content to be pre-loaded in order to improve user experience. If preload is enabled for a
+route, it's content will be fetched after the first $locationChangeSuccess event is fired when the app is loaded. All component js, markup
+and styles will be loaded silently loaded behind the scenes so that when those routes are eventually navigated to they will already
+be cached and can be fulfilled immediately.
+
 The **options** property provides a blank canvas for applications to build intricate routing functionality. Using these 
 properties in conjunction with the IRouteService interface, developers can create new routing constructs as they desire.
  
-# IRouteService
+# Implementing a custom router
 
-Every wilson application is required to implement a special service called IRouteService. This service is used at specific
+Wilson applications may implement a custom router to handle special routing functionality. The router is a service that is used at specific
 points during wilson routing to determine how/when to proceed with route fulfillment. This allows the application to control
 things like restricted routes, path forwarding, dependency resolution, session-based redirections and much more.
 
-IRouteService has access to all route information including the options and data for the current route, this allows distinctive
+The custom router service has access to all route information including the options and data for the current route, this allows distinctive
 configuration per-route that allows for intelligent handling.
+
+Creating a custom router is as easy as configuring it's location in [wilson-config.json](../wilson/core.md#wilson-config) and then declaring it using **wilson.router**. The 
+default configured location is **/client/src/router.js**. The router definition is effectively the same as a service definition with the only
+difference being that there is no service name needed for the router.
 
 Example route entry with options: 
 ```json
@@ -97,9 +122,9 @@ Note the **loggedOutRedirect** options property. Let's assume this property shou
 redirect a user without a session to "/login". This functionality can easily be implemented via IRouteService's 
 [handleRouteChange()](#handleRouteChange) method.
 
-Example handling in IRouteService:
+Example handling in a custom router:
 ```js
-wilson.service('IRouteService', ['$q', '$location', 'AuthService', 
+wilson.router(['$q', '$location', 'AuthService', 
   function($q, $location, AuthService) {
     
     function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
@@ -121,19 +146,20 @@ wilson.service('IRouteService', ['$q', '$location', 'AuthService',
 ```
 
 As you can see in the example, the **handleRouteChange** method has access to routeOptions (the options object 
-from the current route). IRouteService can inject other application services and use custom logic to support
+from the current route). The custom router can inject other application services and use custom logic to support
 any number of specialized functionalities like the one above.
 
 
-# IRouteService Required Functions
+# Custom Router Interface
 
 * [handleRouteChange](#handleRouteChange)
 * [loadDependencies](#loadDependencies)
 * [loadSession](#loadSession)
 * [getTitleText](#getTitleText)
 
-> Note that the examples below implement an IRouteService that has only the sample method. When
-> implementing an actual IRouteService, all of the methods below MUST be included on the service.
+> NOTE: A custom router acts as an extension of the default router and may implement one
+> or more of the above interface methods. Interface methods not included in the custom router
+> will inherit the default functionality.
 
 ## <a name="handleRouteChange"></a>handleRouteChange(currentRoute, routeOptions, routeInfo)
 
@@ -152,7 +178,7 @@ function handleRouteChange(currentRoute: string, routeOptions: Object, routeInfo
 ```
 Implementation Example:
 ```js
-wilson.service('IRouteService', ['$q', '$location', 
+wilson.router(['$q', '$location', 
   function($q, $location) {
     
     function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
@@ -188,7 +214,7 @@ function loadDependencies(routeInfo: Object): Promise;
 ```
 Implementation Example:
 ```js
-wilson.service('IRouteService', ['$q', 
+wilson.router(['$q', 
   function($q) {
     
     function loadDependencies(routeInfo) {
@@ -223,7 +249,7 @@ function loadSession(): Promise;
 ```
 Implementation Example:
 ```js
-wilson.service('IRouteService', ['$q', 'AuthService', 
+wilson.router(['$q', 'AuthService', 
   function($q, AuthService) {
     
     function loadSession() {
@@ -254,7 +280,7 @@ function getTitleText(routeTitle: string): string;
 ```
 Implementation Example (Basic):
 ```js
-wilson.service('IRouteService', [ 
+wilson.router([ 
   function() {
     
     function getTitleText(routeTitle) {
@@ -268,7 +294,7 @@ wilson.service('IRouteService', [
 ```
 Implementation Example (Advanced):
 ```js
-wilson.service('IRouteService', ['$route',
+wilson.router(['$route',
   function($route) {
     
     function getTitleText(routeTitle) {
