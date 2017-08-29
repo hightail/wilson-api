@@ -19,6 +19,9 @@ Wilson Interface
 * [getActivePage](#getActivePage)
 * [getActiveComponent](#getActiveComponent)
 * [getActiveComponentList](#getActiveComponentList)
+* [findComponentId](#findComponentId)
+* [destroyComponent](#destroyComponent)
+* [router](#router)
 * [component](#component)
 * [behavior](#behavior)
 * [service](#service)
@@ -64,8 +67,7 @@ function getActivePage(): string;
 
 ## <a name="getActiveComponent"></a>getActiveComponent(componentId)
 
-Return relevant object references and information for a given active wilsonComponentId. The returned
-object contains a stored reference to $scope and controller for the given wilsonComponentId. This is useful
+Return the component $scope for a given active component instance id (wilsonComponentId). This is useful
 for tying $element references back to our components without needing to use angularjs's [$compileProvider.debugInfoEnabled](https://docs.angularjs.org/guide/production) option.
 
 ```typescript
@@ -77,11 +79,10 @@ Usage Example:
 
 function someHandler() {
   var componentId = $('.ht-my-component').data('wilsonComponentId');
-  var component   = wilson.getActiveComponent(componentId);
+  var scope       = wilson.getActiveComponent(componentId);
   
-  console.log(component.name);        // --> The simple name of our component "my-component"
-  console.log(component.scope);       // --> The isolateScope instance for this component
-  console.log(component.controller);  // --> The controller instance for this component
+  console.log(scope);                               // --> The isolateScope instance for this component
+  console.log(componentId === scope.component.id);  // --> This should always be true
 }
 
 ```
@@ -89,10 +90,86 @@ function someHandler() {
 
 ## <a name="getActiveComponentList"></a>getActiveComponentList()
 
-Returns a list of all active component objects on wilson.
+Returns a list of all active component $scopes on wilson.
 
 ```typescript
 function getActiveComponentList(): Object[];
+```
+
+
+## <a name="findComponentId"></a>findComponentId(jqElement)
+
+Find the component that is nearest to the given jqElement and return its instance id. This method traverses up the 
+DOM tree to the parent to find the component, returning null if not found.
+
+```typescript
+function findComponentId(jqElement: Array): string;
+```
+Usage Example:
+```js
+// Assume we've have an instance of a component with a full name of 'ht-my-component' in the DOM
+
+function someHandler() {
+  var someChildElement = $('.ht-my-component div.something');
+  var componentId      = wilson.findComponentId(someChildElement);
+  var scope            = wilson.getActiveComponent(componentId);
+  
+  console.log(scope);                               // --> The isolateScope instance for the "my-component" component
+  console.log(scope.component.name);                // --> my-component
+  console.log(componentId === scope.component.id);  // --> This should always be true
+}
+
+```
+
+
+## <a name="destroyComponent"></a>destroyComponent(componentId)
+
+Forcibly destroy an active wilson component with the given instance id (componentId).
+
+```typescript
+function destroyComponent(componentId: string): void;
+```
+Usage Example:
+```js
+// Assume we've have an instance of a component with a full name of 'ht-my-component' in the DOM
+
+function someHandler() {
+  var componentId = $('.ht-my-component').data('wilsonComponentId');
+  var scope       = wilson.getActiveComponent(componentId);
+  
+  console.log(scope);                               // --> The isolateScope instance for the "my-component" component
+  console.log(scope.component.name);                // --> my-component
+  console.log(componentId === scope.component.id);  // --> This should always be true
+  
+  wilson.destroyComponent(componentId);
+  
+  console.log(scope.$$destroyed);                   // --> This is now true (scope is destroyed)
+}
+
+```
+
+
+## <a name="router"></a>router(definition)
+
+Declare a [custom router service](../routing/routing.md#Implementingacustomrouter) on the wilson app module. The definition is exactly the same as if it
+was declared as a factory-style service on angularjs directly (sans the name parameter). See the angularjs documentation for [$provide.factory](https://docs.angularjs.org/api/auto/service/$provide#factory). 
+
+```typescript
+function router(definition: any[]|Function): void;
+```
+Usage Example:
+```js
+wilson.router(['$q', 
+  function($q) {
+    
+    function handleRouteInfo(currentRoute, routeOptions, routeInfo) {
+      return $q.when();
+    }
+    
+    // Return service
+    return { handleRouteInfo: handleRouteInfo };
+  }
+]);
 ```
 
 
@@ -231,6 +308,8 @@ Example Config:
     "name":               "MyApplication",
     "version":            "1.0.0",
     "connectionFilters":  "EYJwhgdgJgvAzgBzAYwKZwD6gPYHc6ogzIAWI2AtqhlKgG4CWaMFKGANpAOYCuYXqGKggYEnAC4AzbCAoxacANbjsCIA"
+    "assetPath":          "/client",
+    "useVersionedAssets": true
   },
   "routes": [
     {
