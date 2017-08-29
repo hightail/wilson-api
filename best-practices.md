@@ -37,11 +37,11 @@ publicly (on the $scope instance). This keeps consistency in the pattern that $s
 wilson.component('my-component', {
   controller: ['$scope', function($scope) {
 
-    function foo = function foo(msg) {  // GOOD - Explicit private function only available inside this controller
+    function foo(msg) {                       // GOOD - Explicit private function only available inside this controller
         alert(msg);
     };
 
-    $scope.bar = function bar(msg) {    // GOOD - Explicit $scope function available in the controller and view
+    $scope.bar = function bar(msg) {          // GOOD - Explicit $scope function available in the controller and view
         alert(msg);
     };
 

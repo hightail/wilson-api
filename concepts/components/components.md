@@ -73,16 +73,24 @@ ensures that each component has the same base interface and gives the developer 
 common functions and utilities, which helps to eliminate boiler plate and code duplication. Specifically, each
 component's $scope is decorated with a special interface that makes it a wilson component.
 
-[See the code in ComponentFactoryService](https://github.com/hightail/wilson/blob/4.0.0/lib/client/src/services/ComponentFactoryService.js)
+[See the code in ComponentFactoryService](https://github.com/hightail/wilson/blob/4.1.2/lib/client/src/services/ComponentFactoryService.js)
 
 # $scope decorations
 
 * [component](#component)
-* [parentComponent](#parentComponent)
-* [stateMachine](#stateMachine)
+* [state](#state)
 * [defaultValue](#defaultValue)
+* [translate](#translate)
 * [triggerDigest](#triggerDigest)
 * [bindToDigest](#bindToDigest)
+* [stateMachine](#stateMachine)
+* [storage.get](#storageGet)
+* [storage.set](#storageSet)
+* [on.event](#onEvent)
+* [on.signal](#onSignal)
+* [on.watch](#onWatch)
+* [on.digest](#onDigest)
+* [on.pageUnload](#onPageUnload)
 
 
 ## <a name="component"></a>$scope.component
@@ -90,12 +98,13 @@ component's $scope is decorated with a special interface that makes it a wilson 
 An object representing the identification metadata of the component.
 
 ```typescript
-component: object;
+component: Object;
 ```
 Properties:
 ```json
 {
-  "id": ""
+  "id": "bd671303-2a19-4ab2-c175-9c3cb591ac09",     // Unique Id for this instance
+  "name": "nav-bar"                                 // Name of the component
 }
 ```
 
@@ -103,84 +112,24 @@ Usage Example:
 ```js
 wilson.component('nav-bar', {
   controller: ['$scope', function($scope) {
-    var message = 'This is the ' + $scope.componentCName + ' component';
+    var message = 'This is the ' + $scope.component.name + ' component';
     
     wilson.log.info(message);   // --> "This is the nav-bar component"
   }]
 });
-```
-
-## <a name="parentComponent"></a>$scope.parentComponent
-
-The scope of this component's parent wilson component (aka it's containing component). This gives components access
-(if necessary) to the scope of their parent. If this is a page-level component parentComponent will be null.
-
-> IMPORTANT: **parentComponent** is not necessarily the direct parent $scope, but the $scope of the parent wilson component.
-
-```typescript
-parentComponent: Object;
-```
-Example Parent:
-
-**todo-list.html**
-```html
-<div class="todo-list">
-  <ul>
-    <li ng-repeat="todo in todoList">
-      <ht-todo todo="todo"></ht-todo>     <!-- Assume  "ht" is our component prefix -->
-    </li>
-  </ul>
-</div>
-```
-**todo-list.js**
-```js
-wilson.component('todo-list', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    $scope.todoList = [{ name: 'Go to the store' }, { name: 'Make Dinner' }, { name: 'Walk the dog'}];
-  }]
-});
-```
-Example Child:
-
-**todo.html**
-```html
-<div class="todo">
-  <h3>[[name]]</h3>
-  <button ng-click="markComplete()">mark complete</button>
-</div>
-```
-**todo.js**
-```js
-wilson.component('todo', {
-  scope: {
-    todo: '=todo'
-  },
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    $scope.markComplete = function markComplete() {
-      $scope.todo.complete = true;
-    };
-    
-    wilson.log.info($scope.parentComponent);            // --> This is the todo-list component $scope
-    wilson.log.info($scope.parentComponent.todoList);   // --> [{ name: 'Go to the store }, ...]
-  }]
-});
-```
+````
 
 
-## <a name="stateMachine"></a>$scope.stateMachine
+## <a name="state"></a>$scope.state
 
 A special stateMachine object that can be used to add state-based control to a component. Uses the 
 [javascript-state-machine library](https://github.com/jakesgordon/javascript-state-machine). 
 
 ```typescript
-stateMachine: Object;
+state: Object;
 ```
 
-See details below for the [setState() method](#setState).
+See details below for the [stateMachine() method](#stateMachine).
 
 
 ## <a name="defaultValue"></a>$scope.defaultValue(scopePropertyName, defaultValue)
@@ -205,6 +154,30 @@ wilson.component('nav-bar', {
   }]
 });
 ```
+
+
+## <a name="translate"></a>controller.translate(text, options)
+
+Translate a text string using the i18next service. Used for internationalizing dynamic strings
+during run-time of the application. Accepts the original text and returns a translated string.
+
+```typescript
+function translate(text: string, options: Object): string;
+```
+Usage Example:
+```js
+wilson.component('my-component', {
+  controller: ['$scope', function($scope) {
+    
+    // Translate to Spanish
+    var translatedText  = $scope.translate('Where is my dog?', { lng: 'es' });
+    
+    wilson.log.info(translatedText);    // --> "Donde esta mi perro?"
+    
+  }]
+});
+```
+
 
 ## <a name="triggerDigest"></a>$scope.triggerDigest()
 
@@ -264,197 +237,26 @@ wilson.component('my-component', {
 > for demonstration purposes. In practice developers should use the $timeout service which will trigger a digest
 > by default
 
-# Controller decorations
 
-* [translate](#translate)
-* [overrideText](#overrideText)
-* [getPersistentValue](#getPersistentValue)
-* [setPersistentValue](#setPersistentValue)
-* [setPersistentValues](#setPersistentValues)
-* [watchAndPersist](#watchAndPersist)
-* [setState](#setState)
-* [auto.on](#autoOn)
-* [auto.add](#autoAdd)
-* [auto.watch](#autoWatch)
-* [auto.afterDigest](#autoAfterDigest)
-
-
-
-## <a name="translate"></a>controller.translate(text, options)
-
-Translate a text string using the i18next service. Used for internationalizing dynamic strings
-during run-time of the application. Accepts the original text and returns a translated string.
-
-```typescript
-function translate(text: string, options: Object): string;
-```
-Usage Example:
-```js
-wilson.component('my-component', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    // Translate to Spanish
-    var translatedText  = controller.translate('Where is my dog?', { lng: 'es' });
-    
-    wilson.log.info(translatedText);    // --> "Donde esta mi perro?"
-  }]
-});
-```
-
-## <a name="overrideText"></a>controller.overrideText(overrideNamespace, textKey, overrideText)
-
-Add an override translation mapping for a component namespace. Used for detailed customization of i18n strings
-in a specific context.
-
-```typescript
-function overrideText(overrideNamespace: string, textKey: string, overrideText: string): void;
-```
-Usage Example:
-```js
-wilson.component('my-component', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    controller.overrideText($scope.componentCName, 'Where is my dog?', 'Donde esta mi gato?')
-    
-    // Translate to Spanish
-    var translatedText  = $scope.translate('Where is my dog?', { lng: 'es' });
-    
-    wilson.log.info(translatedText);    // --> "Donde esta mi gato?"
-  }]
-});
-```
-
-## <a name="getPersistentValue"></a>controller.getPersistentValue(key, defaultValue)
-
-Retrieve a value from this component's localStorage namespace at a given key. If the value does not exist
-return the specified defaultValue, otherwise return null.
-
-```typescript
-function getPersistentValue(key: string, defaultValue: any): any;
-```
-Usage Example:
-```js
-wilson.component('dashboard', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
-    
-    wilson.log.info($scope.viewMode);                         // --> "list-view"
-    
-    controller.setPersistentValue('viewMode', 'grid-view');   // --> sets 'viewMode' to local storage
-    
-    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
-    
-    wilson.log.info($scope.viewMode);                         // --> "grid-view"
-  }]
-});
-```
-
-## <a name="setPersistentValue"></a>controller.setPersistentValue(key, value)
-
-Store a value to this component's localStorage namespace at a given key. This will persist in the browser
-indefinitely and will be retained when the browser is refreshed or even closed.
-
-```typescript
-function setPersistenValue(key: string, value: any): any;
-```
-Usage Example:
-```js
-wilson.component('dashboard', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    controller.setPersistentValue('viewMode', 'grid-view');
-    
-    $scope.viewMode = controller.getPersistentValue('viewMode', 'list-view');
-    
-    wilson.log.info($scope.viewMode);   // --> "grid-view"
-  }]
-});
-```
-
-## <a name="setPersistentValues"></a>controller.setPersistentValues(obj)
-
-Store a set of key/values to this component's localStorage namespace. Returns an object that
-contains all stored key/values for this component's namespace. This will persist in the browser
-indefinitely and will be retained when the browser is refreshed or even closed.
-
-```typescript
-function setPersistentValues(obj: Object): Object;
-```
-Usage Example:
-```js
-wilson.component('dashboard', {
-  controller: ['$scope', function($scope) {
-    var controller = this;
-    
-    controller.setPersistentValues({ viewMode: 'grid-view', welcomeMessage: 'Hello World' });
-    
-    $scope.viewMode       = controller.getPersistentValue('viewMode');
-    $scope.welcomeMessage = controller.getPersistentValue('welcomeMessage');
-    
-    wilson.log.info($scope.viewMode);         // --> "grid-view"
-    wilson.log.info($scope.welcomeMessage);   // --> "Hello World"
-  }]
-});
-```
-
-## <a name="watchAndPersist"></a>controller.watchAndPersist(key, defaultValue)
-
-Setup a $scope.$watch on the given key that stores the value to this component's localStorage namespace
-when the value changes. Stores the defaultValue if the watched value becomes falsey.
-
-```typescript
-function watchAndPersist(key: string, defaultValue: any): void;
-```
-Usage Example:
-```js
-wilson.component('dashboard', {
-  controller: ['$scope', '$timeout', function($scope, $timeout) {
-    var controller = this;
-    
-    $scope.message = 'Hello';
-    
-    controller.watchAndPersist('message', 'Foo');   // Start the watch
-    
-    $scope.updateMessage = function updateMessage(message) {
-      $scope.message = message;
-    };
-    
-    $scope.updateMessage('World');    // Update the message - this will trigger the watch
-    
-    $timeout(function() {
-      var storedMessage = controller.getPersistentValue('message');
-      
-      wilson.log.info(storedMessage);   // --> "World"  - The message will be set in localStorage
-    })
-  }]
-});
-```
-
-## <a name="setState"></a>controller.setState(config, callback)
+## <a name="stateMachine"></a>$scope.stateMachine(config, callback)
 
 Setup a bindable stateMachine on the component $scope. Uses the [javascript-state-machine library](https://github.com/jakesgordon/javascript-state-machine) to create
 a state-based control concept for a component. This method takes a specific configuration object unique to the 
 [StateMachine.create()](https://github.com/jakesgordon/javascript-state-machine#usage) method of javascript-state-machine.
 
 ```typescript
-function setState(config: Object, callback: Function): void;
+function stateMachine(config: Object, callback: Function): void;
 ```
 Usage Example:
 
 ```js
 wilson.component('dashboard', {
   controller: ['$scope', '$timeout', function($scope, $timeout) {
-    var controller = this;
     
     $scope.message = 'Please Wait...';
     
     // Setup the stateMachine
-    controller.setState({
+    $scope.stateMachine({
       initial: 'Loading',
       events:  [
         { name: 'loaded', from: 'Loading', to: 'Ready'  },
@@ -472,13 +274,13 @@ wilson.component('dashboard', {
     });
     
     $timeout(function() {
-      $scope.stateMachine.loaded();
+      $scope.state.loaded();
       
-      wilson.log.info($scope.stateMachine.current); // --> "Ready"
+      wilson.log.info($scope.state.current);        // --> "Ready"
       wilson.log.info($scope.message);              // --> "Dashboard Ready"
     });
      
-    wilson.log.info($scope.stateMachine.current);   // --> "Loading"
+    wilson.log.info($scope.state.current);          // --> "Loading"
     wilson.log.info($scope.message);                // --> "Please Wait..."
   }]
 });
@@ -513,22 +315,79 @@ Each timeout entry supports 4 properties:
 | **refreshEvent** | no           | An event that will reset the timeout if not yet completed |
 
 
-# Controller event handlers
+# Storage Helpers
+
+Wilson component scopes are decorated with special storage helper methods for setting and getting localStorage data that
+is specific to the component itself. This data is stored to a component-namespaced key that isolates the values stored
+from other components. These values should be explicitly set and cleared from the component scope.
+
+## <a name="storage.get"></a>$scope.storage.get(key, defaultValue)
+
+Retrieve a value from this component's localStorage namespace at a given key. If the value does not exist
+return the specified defaultValue, otherwise return null.
+
+```typescript
+function get(key: string, defaultValue: any): any;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', function($scope) {
+    
+    $scope.viewMode = $scope.storage.get('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);                         // --> "list-view"
+    
+    $scope.storage.set('viewMode', 'grid-view');              // --> sets 'viewMode' to local storage
+    
+    $scope.viewMode = $scope.storage.get('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);                         // --> "grid-view"
+    
+  }]
+});
+```
+
+## <a name="storage.set"></a>$scope.storage.set(key, value)
+
+Store a value to this component's localStorage namespace at a given key. This will persist in the browser
+indefinitely and will be retained when the browser is refreshed or even closed.
+
+```typescript
+function set(key: string, value: any): any;
+```
+Usage Example:
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', function($scope) {
+    
+    $scope.storage.set('viewMode', 'grid-view');
+    
+    $scope.viewMode = $scope.storage.get('viewMode', 'list-view');
+    
+    wilson.log.info($scope.viewMode);   // --> "grid-view"
+    
+  }]
+});
+```
+
+
+# Event Helpers
 
 The component controller interface contains a special set of event handlers under the **auto** sub-property.
 These methods provide the same functionality as the original handling methods, but are auto cleaned up when
 the scope of the component is destroy. This allows developers to use them freely without having to worry about
 memory/reference management.
 
-## <a name="autoOn"></a>controller.auto.on(eventName, handler)
+## <a name="on.event"></a>$scope.on.event(eventName, handler)
 
 Alias for $scope.$on. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$on).
 
 ```typescript
-function on(eventName: string, handler: Function): void;
+function event(eventName: string, handler: Function): void;
 ```
 
-## <a name="autoWatch"></a>controller.auto.watch(key, handler)
+## <a name="on.watch"></a>$scope.on.watch(key, handler)
 
 Alias for $scope.$watch. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch).
 
@@ -536,24 +395,32 @@ Alias for $scope.$watch. See [angularjs documentation](https://docs.angularjs.or
 function watch(key: string, handler: Function): void;
 ```
 
-## <a name="autoAdd"></a>controller.auto.add(signal, handler)
+## <a name="on.signal"></a>$scope.on.signal(signal, handler)
 
 Alias for signal.add. See [js-signal documentation](http://millermedeiros.github.io/js-signals/docs/symbols/Signal.html#add).
 
 ```typescript
-function add(signal: Signal, handler: Function): void;
+function signal(signal: Signal, handler: Function): void;
 ```
 
 > EXPLAINED: This method attaches the **handler** to the **signal** by calling the signal.add.
 
-## <a name="autoAfterDigest"></a>controller.auto.afterDigest(handler)
+## <a name="on.digest"></a>$scope.on.digest(handler)
 
 Run the given handler after each digest cycle completes.
 
 ```typescript
-function afterDigest(handler: Function): void;
+function digest(handler: Function): void;
 ```
 
+## <a name="on.pageUnload"></a>$scope.on.pageUnload(handler, includeLocalNav)
+
+Run the given handler when the pages is about to unload. If **includeLocalNav** is true, then also
+run on local page navigation.
+
+```typescript
+function pageUnload(handler: Function, includeLocalNav: boolean): void;
+```
 
 # Advanced Component Features
 
@@ -564,7 +431,10 @@ give flexibility to developers when determining the best way to structure their 
 
 Each component supports a special html attribute called "expose". This attribute can be applied to a component when it is
 used in a template and must be supplied a property name as the attribute value. When applied, the sub-component will 
-decorate its $scope onto the parent component $scope at the specified property.
+decorate any **exports** onto it's parent component $scope.
+
+When using the expose attribute an **exports** object should be included in the component definition. This object represents
+an explicit map of properties that will be "exposed" on the parent component scope.
 
 Example:
 
@@ -578,38 +448,47 @@ Example:
 ```js
 wilson.component('dashboard', {
   controller: ['$scope', '$timeout', function($scope, $timeout) {
-    var controller = this;
     
-    wilson.log.info($scope.newsFeed);           // --> This will be null at construction time (since parents load prior to children)
+    wilson.log.info($scope.newsFeed);             // --> This will be null at construction time (since parents load prior to children)
     
     $timeout(function() {
-      wilson.log.info($scope.newsFeed.feed);    // --> [{ id: '1234', title: 'Stocks up 20%' }]  - referenced from news-feed's $scope
+      wilson.log.info($scope.newsFeed.feed);      // --> [{ id: '1234', title: 'Stocks up 20%' }]  - referenced from news-feed's $scope
+      wilson.log.info($scope.newsFeed.trending);  // --> undefined (this was not included in the exports object))
     });
+    
   }]
 });
 ```
 **news-feed.js**
 ```js
 wilson.component('news-feed', {
+  exports: {
+    feed: 'feed'
+  },
   controller: ['$scope', function($scope) {
-    var controller = this;
     
-    $scope.feed = [{ id: '1234', title: 'Stocks up 20%' }];
+    $scope.feed     = [{ id: '1234', title: 'Stocks up 20%' }];
+    $scope.trending = [{ id: '5678', title: 'Some Political BS' }]; 
+    
   }]
 });
 ```
 
-In our example above, the news-feed component decorates its $scope onto dashboard as **newsFeed**. This allows the
-dashboard component to access the $scope of its child at runtime. 
+In our example above, the news-feed component decorates an object of exported properties onto dashboard as **newsFeed**. This allows the
+dashboard component to access the $scope of its child at runtime (post construction). 
 
 The expose feature is very useful when building complex interaction models between components. It adds another dimension to
 how developers can structure their code while still decoupling concerns. Out-of-the-box angularjs architecture supports child to parent 
 $scope access, but not the other way around. Wilson adds this functionality knowing that there are times when this may be
 necessary to achieve a desirable solution.
 
+> NOTE: Legacy support for the expose attribute decorates the entire child $scope onto the parent component $scope. This
+> functionality is now deprecated as of wilson v4. Please use the **exports** object to itemize exposed functionality
+> as this is more explicit and therefore considered best practice.
+
 ## Dependency hooks
 
-Component controllers provide special hooks to optimize the loading of external scriptDependencies. Many times
+Wilson components provide special hooks to optimize the loading of external scriptDependencies. Many times
 a component may need to use a special javascript library to provide its functionality. However, we may not want to add this library to
 the core application javascript and increase our load time...Enter wilson dependency hooks.
 
@@ -628,15 +507,14 @@ wilson.component('dashboard', {
     'https://cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js'
   ],
   controller: ['$scope', '$window', function($scope, $window) {
-    var controller = this;
     
     $scope.showCharts = false;
     
-    controller.onDependenciesReady = function() {       // Fires when dependency scripts are loaded and ready
+    $scope.onDependenciesReady = function() {       // Fires when dependency scripts are loaded and ready
       $scope.showCharts = true;
     };
     
-    controller.onDependenciesError = function() {       // Fires if dependency scripts fail to load
+    $scope.onDependenciesError = function() {       // Fires if dependency scripts fail to load
      $window.alert('Sorry we don\'t have what we need to load');
     };
     
@@ -644,7 +522,7 @@ wilson.component('dashboard', {
 });
 ```
 If scriptDependencies are defined and non-empty, wilson will attempt to load the scripts when the component is instantiated. The 
-controller may then implement the **onDependenciesReady** and **onDependenciesError** methods in order to handle the
+$scope may then implement the **onDependenciesReady** and **onDependenciesError** methods in order to handle the
 hooks fired by wilson.
 
 > NOTE: Template content that requires the use of scriptDependencies should be manually prevented from rendering prior
