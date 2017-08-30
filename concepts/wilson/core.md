@@ -21,6 +21,7 @@ Wilson Interface
 * [getActiveComponentList](#getActiveComponentList)
 * [findComponentId](#findComponentId)
 * [destroyComponent](#destroyComponent)
+* [routeInfo](#routeInfo)
 * [router](#router)
 * [component](#component)
 * [behavior](#behavior)
@@ -138,7 +139,7 @@ function someHandler() {
   var scope       = wilson.getActiveComponent(componentId);
   
   console.log(scope);                               // --> The isolateScope instance for the "my-component" component
-  console.log(scope.component.name);                // --> my-component
+  console.log(scope.component.name);                // --> "my-component"
   console.log(componentId === scope.component.id);  // --> This should always be true
   
   wilson.destroyComponent(componentId);
@@ -147,6 +148,54 @@ function someHandler() {
 }
 
 ```
+
+
+## <a name="routeInfo"></a>routeInfo
+
+An object representing the route information for the currently active route. This can be used from components to
+ determine any data parameters that are represented in the route information.
+
+```typescript
+routeInfo: Object;
+```
+
+Given the following routing.json:
+```json
+{
+  "routes": [
+    {
+      "path":           "/dashboard/:tabId",
+      "component":      "dashboard",
+      "title":          "Dashboard Page",
+      "preload":        true,
+      "options":        {}
+    },
+    {
+      "path":       null,
+      "component":  "404",
+      "title":      "Not Found",
+      "options":    {}
+    }
+  ]
+}
+```
+
+Let's say we've just routed to the "/dashboard/newsfeed" and the "dashboard" component constructor is called. The following
+dashboard component implementation shows how the route parameters can be accessed via wilson.routeInfo: 
+
+```js
+wilson.component('dashboard', {
+  controller: ['$scope', '$element', function($scope, $element) {
+    
+    console.log(wilson.routeInfo.tabId);      // --> "newsfeed"  -- Routing data is accessible here via the routeInfo object on wilson
+    
+  }]
+});
+```
+
+> NOTE: The routeInfo object is a virtual property and represents a copy of the currently active routeInfo. This
+> object is immutable and cannot be changed by its accessor. **IMPORTANT:** This means if wilson.routeInfo is stored into a local
+> variable it will not update on route change. 
 
 
 ## <a name="router"></a>router(definition)
