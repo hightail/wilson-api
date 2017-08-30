@@ -358,7 +358,7 @@ Example Config:
   "app": {
     "name":               "MyApplication",
     "version":            "1.0.0",
-    "connectionFilters":  "EYJwhgdgJgvAzgBzAYwKZwD6gPYHc6ogzIAWI2AtqhlKgG4CWaMFKGANpAOYCuYXqGKggYEnAC4AzbCAoxacANbjsCIA"
+    "connectionFilters":  "EYJwhgdgJgvAzgBzAYwKZwD6gPYHc6ogzIAWI2AtqhlKgG4CWaMFKGANpAOYCuYXqGKggYEnAC4AzbCAoxacANbjsCIA",
     "assetPath":          "/client",
     "useVersionedAssets": true
   },
