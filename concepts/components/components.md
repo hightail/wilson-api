@@ -291,7 +291,7 @@ controlled by the stateMachine object itself.
 
 Example stateMachine definition:
 ```js
-controller.setState({
+$scope.stateMachine({
   initial: 'Loading',
   events:  [
     { name: 'loaded', from: 'Loading', to: 'Ready'    },
@@ -302,7 +302,7 @@ controller.setState({
     { state: 'Failed', duration: 3000, timeoutEvent: 'retry', refreshEvent: 'failed' }
   ],
   callbacks: {}
-})
+});
 ```
 
 Each timeout entry supports 4 properties:
@@ -321,7 +321,7 @@ Wilson component scopes are decorated with special storage helper methods for se
 is specific to the component itself. This data is stored to a component-namespaced key that isolates the values stored
 from other components. These values should be explicitly set and cleared from the component scope.
 
-## <a name="storage.get"></a>$scope.storage.get(key, defaultValue)
+## <a name="storageGet"></a>$scope.storage.get(key, defaultValue)
 
 Retrieve a value from this component's localStorage namespace at a given key. If the value does not exist
 return the specified defaultValue, otherwise return null.
@@ -348,7 +348,7 @@ wilson.component('dashboard', {
 });
 ```
 
-## <a name="storage.set"></a>$scope.storage.set(key, value)
+## <a name="storageSet"></a>$scope.storage.set(key, value)
 
 Store a value to this component's localStorage namespace at a given key. This will persist in the browser
 indefinitely and will be retained when the browser is refreshed or even closed.
@@ -379,7 +379,7 @@ These methods provide the same functionality as the original handling methods, b
 the scope of the component is destroy. This allows developers to use them freely without having to worry about
 memory/reference management.
 
-## <a name="on.event"></a>$scope.on.event(eventName, handler)
+## <a name="onEvent"></a>$scope.on.event(eventName, handler)
 
 Alias for $scope.$on. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$on).
 
@@ -387,7 +387,7 @@ Alias for $scope.$on. See [angularjs documentation](https://docs.angularjs.org/a
 function event(eventName: string, handler: Function): void;
 ```
 
-## <a name="on.watch"></a>$scope.on.watch(key, handler)
+## <a name="onWatch"></a>$scope.on.watch(key, handler)
 
 Alias for $scope.$watch. See [angularjs documentation](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch).
 
@@ -395,7 +395,7 @@ Alias for $scope.$watch. See [angularjs documentation](https://docs.angularjs.or
 function watch(key: string, handler: Function): void;
 ```
 
-## <a name="on.signal"></a>$scope.on.signal(signal, handler)
+## <a name="onSignal"></a>$scope.on.signal(signal, handler)
 
 Alias for signal.add. See [js-signal documentation](http://millermedeiros.github.io/js-signals/docs/symbols/Signal.html#add).
 
@@ -405,7 +405,7 @@ function signal(signal: Signal, handler: Function): void;
 
 > EXPLAINED: This method attaches the **handler** to the **signal** by calling the signal.add.
 
-## <a name="on.digest"></a>$scope.on.digest(handler)
+## <a name="onDigest"></a>$scope.on.digest(handler)
 
 Run the given handler after each digest cycle completes.
 
@@ -413,7 +413,7 @@ Run the given handler after each digest cycle completes.
 function digest(handler: Function): void;
 ```
 
-## <a name="on.pageUnload"></a>$scope.on.pageUnload(handler, includeLocalNav)
+## <a name="onPageUnload"></a>$scope.on.pageUnload(handler, includeLocalNav)
 
 Run the given handler when the pages is about to unload. If **includeLocalNav** is true, then also
 run on local page navigation.
