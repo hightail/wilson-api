@@ -200,7 +200,7 @@ wilson.component('dashboard', {
 
 ## <a name="router"></a>router(definition)
 
-Declare a [custom router service](../routing/routing.md#Implementingacustomrouter) on the wilson app module. The definition is exactly the same as if it
+Declare a [custom router service](../routing/routing.md#implementing-a-custom-router) on the wilson app module. The definition is exactly the same as if it
 was declared as a factory-style service on angularjs directly (sans the name parameter). See the angularjs documentation for [$provide.factory](https://docs.angularjs.org/api/auto/service/$provide#factory). 
 
 ```typescript

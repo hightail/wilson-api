@@ -83,11 +83,11 @@ application can perform simple routing from page to page with changing titles.
 
 The **preload** property allows designated route content to be pre-loaded in order to improve user experience. If preload is enabled for a
 route, it's content will be fetched after the first $locationChangeSuccess event is fired when the app is loaded. All component js, markup
-and styles will be loaded silently loaded behind the scenes so that when those routes are eventually navigated to they will already
+and styles will be loaded silently behind the scenes so that when those routes are eventually navigated to they will already
 be cached and can be fulfilled immediately.
 
 The **options** property provides a blank canvas for applications to build intricate routing functionality. Using these 
-properties in conjunction with the IRouteService interface, developers can create new routing constructs as they desire.
+properties in conjunction with a custom router, developers can create new routing constructs as they desire.
  
 # Implementing a custom router
 
@@ -98,9 +98,9 @@ things like restricted routes, path forwarding, dependency resolution, session-b
 The custom router service has access to all route information including the options and data for the current route, this allows distinctive
 configuration per-route that allows for intelligent handling.
 
-Creating a custom router is as easy as configuring it's location in [wilson-config.json](../wilson/core.md#wilson-config) and then declaring it using **wilson.router**. The 
-default configured location is **/client/src/router.js**. The router definition is effectively the same as a service definition with the only
-difference being that there is no service name needed for the router.
+Creating a custom router is as easy as configuring it's location in [wilson-config.json](../wilson/core.md#wilson-config) and then declaring it using **wilson.router**. The router
+file is specified via the **server.projectPaths.routeService** config property and defaults to a value of **/client/src/router.js**. The router definition is effectively the same as a service definition 
+with the only difference being that there is no service name needed for the router.
 
 Example route entry with options: 
 ```json
@@ -158,7 +158,7 @@ any number of specialized functionalities like the one above.
 * [getTitleText](#getTitleText)
 
 > NOTE: A custom router acts as an extension of the default router and may implement one
-> or more of the above interface methods. Interface methods not included in the custom router
+> or more of the above interface methods. Any methods not included in the custom router
 > will inherit the default functionality.
 
 ## <a name="handleRouteChange"></a>handleRouteChange(currentRoute, routeOptions, routeInfo)
