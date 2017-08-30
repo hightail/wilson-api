@@ -71,12 +71,12 @@ Each route entry supports the following distinct properties:
 | **path**           | string   | The URL path, see angularjs [$routeProvider.when()](https://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) |
 | **component**      | string   | The name of the target component for this route |
 | **title**          | string   | The html title to use for this page (i.e. <title>...</title>) |
-| **preload**        | boolean  | Whether or not this route content should be pre-loaded after first navigation |
-| **defaultParams**  | Object   | An object containing default route parameters that should be applied |
+| **preload**        | boolean  | A flag to specify if the contents of this route should be pre-loaded - Optional |
+| **defaultParams**  | Object   | An object containing default route parameters that should be applied - Optional |
 | **options**        | Object   | An object with optional data used to provide extra functionality |
 
 
-These are the basic properties that wilson reads and uses from the route entries. Without adding any option support, an
+These are the properties that wilson reads and uses from the route entries. Without adding any option support, an
 application can perform simple routing from page to page with changing titles. 
 
 > Note that **title** may be templated with dynamic content using the [translateTitle()](#translateTitle) method, covered below.
