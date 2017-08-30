@@ -1,4 +1,4 @@
-# Wilson - v3.1.0
+# Wilson - v4.1.2
 
 Wilson is framework that adds a distinct component abstraction to Angularjs web applications. These components 
 can be lazily-loaded at route-time automatically based on dependencies (this works in conjunction with the Wilson
