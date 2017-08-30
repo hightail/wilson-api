@@ -1,4 +1,4 @@
-# Wilson - v3.1.0
+# Wilson - v4.1.2
 
 Wilson is framework that adds a distinct component abstraction to Angularjs web applications. These components 
 can be lazily-loaded at route-time automatically based on dependencies (this works in conjunction with the Wilson
@@ -27,6 +27,8 @@ wilson.utility('MyUtility',       [..., function(...) { }]);
 wilson.class('MyClass',           [..., function(...) { }]);
  
 wilson.filter('MyFilter',         [..., function(...) { }]);
+
+wilson.router([..., function(...) { }]);
 ```
 
 Although this initial declaration is not specifically on the 'angular' global instance, under-the-hood, wilson
@@ -47,6 +49,8 @@ wilson.class()     ---> angular.factory()
 wilson.utility()   ---> angular.factory()
   
 wilson.filter()    ---> angular.filter()
+
+wilson.router()    ---> angular.factory()
 ```
 
 Wilson ensures that some base options provided to angular so that these constructs are represented appropriately, but as

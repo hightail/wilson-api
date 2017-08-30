@@ -12,8 +12,11 @@ This is the recommended pattern:
 
 ```js
 wilson.component('my-component', {
+  transclude: true,                                           // Optional
   scriptDependencies: [],                                     // Optional    
   scope: {},                                                  // Optional
+  exports: {},                                                // Optional
+  inherit: {},                                                // Optional
   require: [],                                                // Optional
   controller: [function() {}],                                // Required                         
   link: function($scope, $element, $attrs, controller) {}     // Optional
@@ -24,22 +27,34 @@ wilson.component('my-component', {
 
 ___
 
-**2 *Avoid using "this" to reference a controller instance. Store a local "controller" reference.***
+**2 *Avoid using "this" in a component controller. Use private functions or declare them on the $scope so that they can be used in from the view.***
 
-This makes access to the controller instance very explicit. It also keeps consistency with the
-"controller" parameter in the **link** method. This "controller" reference should be declared as the
-first line of each component controller.
+Wilson components treat $scope as the effective controller. All controller functions should be declared privately or
+publicly (on the $scope instance). This keeps consistency in the pattern that $scope represents a component instance.
+
 
 ```js
 wilson.component('my-component', {
   controller: ['$scope', function($scope) {
-    var controller = this;                    // This is recommended in every controller
+
+    function foo(msg) {                       // GOOD - Explicit private function only available inside this controller
+        alert(msg);
+    };
+
+    $scope.bar = function bar(msg) {          // GOOD - Explicit $scope function available in the controller and view
+        alert(msg);
+    };
+
+    this.foobar = function foobar(msg) {      // BAD - "this" is on the controller which is not used
+        alert(msg);
+    };
+
   }]
 });
 ```
 ___
 
-**3 *Declare explicit function names for all $scope and controller functions***
+**3 *Declare explicit function names for all $scope functions***
 
 This makes debugging much easier for the developer. If an error prints to the console, the 
 stack trace will have a function name to point out where the problem occurred. Without it the 
@@ -48,15 +63,14 @@ console will print "Anonymous Function" which is ambiguous and does not help wit
 ```js
 wilson.component('my-component', {
   controller: ['$scope', function($scope) {
-    var controller = this;
-    
+
     $scope.message = '';
     
     $scope.updateMessage = function updateMessage(message) {        // GOOD - Function name matches the property name
       $scope.message = message;
     };
     
-    controller.clearMessage = function() { $scope.message = ''; };  // BAD  - Function has no name
+    $scope.clearMessage = function() { $scope.message = ''; };      // BAD  - Function has no name
   }]
 });
 ```
@@ -101,7 +115,7 @@ wilson.service('MyService', ['$rootScope', function($rootScope) {
   
   service.doSomethingElse = function doSomethingElse() {};
   
-  service.doALlTheThings  = function doAllTheThings() {};
+  service.doAllTheThings  = function doAllTheThings() {};
   
   return service;
 }]);
