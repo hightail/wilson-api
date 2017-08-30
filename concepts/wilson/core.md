@@ -187,15 +187,17 @@ dashboard component implementation shows how the route parameters can be accesse
 wilson.component('dashboard', {
   controller: ['$scope', '$element', function($scope, $element) {
     
-    console.log(wilson.routeInfo.tabId);      // --> "newsfeed"  -- Routing data is accessible here via the routeInfo object on wilson
+    console.log(wilson.routeInfo.tabId);          // --> "newsfeed"  -- Routing data is accessible here via the routeInfo object on wilson
+    
+    $scope.currentTab = wilson.routeInfo.tabId;   // E.G. Use routeInfo data to determine the state of the component
     
   }]
 });
 ```
 
 > NOTE: The routeInfo object is a virtual property and represents a copy of the currently active routeInfo. This
-> object is immutable and cannot be changed by its accessor. **IMPORTANT:** This means if wilson.routeInfo is stored into a local
-> variable it will not update on route change. 
+> object is immutable and cannot be changed by its accessor. **IMPORTANT: This means if wilson.routeInfo is stored into a local
+> variable it will not update on route change.** 
 
 
 ## <a name="router"></a>router(definition)
