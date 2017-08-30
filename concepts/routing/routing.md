@@ -6,7 +6,7 @@ and controllers be declared on angular prior to routing. With wilson, routes are
 component (angularjs element-style directive). At routing time, wilson determines all necessary dependencies needed to fulfill
 the route, loads all javascript, markup templates and styles then resolves the route and renders the routed component.
 
-This gives wilson applications the ability to "code-split" their javascript and markup templates. Although the application 
+This gives wilson applications the ability to "code-split" their javascript, markup templates and styles. Although the application 
 is a SPA, it does not need to load a monolithic javascript payload that contains the entire application. Rather, as the user navigates
 to different pages, new javascript is added to support the new areas. This greatly reduces the payload size of javascript needed
 to initially load the application and removes development concern as a codebase grows larger and larger over time.
