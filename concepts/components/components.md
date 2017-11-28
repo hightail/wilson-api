@@ -486,6 +486,65 @@ necessary to achieve a desirable solution.
 > functionality is now deprecated as of wilson v4. Please use the **exports** object to itemize exposed functionality
 > as this is more explicit and therefore considered best practice.
 
+## Inheriting from a parent component
+
+In some cases it may be necessary for a child component to inherit some methods directly from its parent component. In most cases
+this can be accomplished by using standard isolate scope bindings ([see angularjs scope bindings](https://docs.angularjs.org/api/ng/service/$compile#-scope-)).
+However, there are times when it may be more convenient for a child component to directly inherit one or more methods from its parent vs passing them through as
+markup attributes. It is for these cases that Wilson provides an extended "inherit" option on component declarations.
+ 
+Example:
+
+**news-feed.html**
+```html
+<div class="news-feed">
+  <ht-feed-item ng-repeat="item in feed" item="item"></ht-feed-item>     <!-- Assume "ht" is our component prefix -->
+</div>
+```
+**news-feed.js**
+```js
+wilson.component('news-feed', {
+  controller: ['$scope', function($scope) {
+    
+    $scope.feed     = [{ id: '1234', title: 'Stocks up 20%' }, { id: '5678', title: 'Some Political BS' }];
+    
+    $scope.removeFeedItem = function removeFeedItem(id) {
+      _.remove($scope.feed, { id: id });
+    };
+    
+  }]
+});
+```
+**feed-item.html**
+```html
+<div class="feed-item">
+  <h2>[[item.title]]</h2>     <!-- Assume "ht" is our component prefix -->
+  <button ng-click="removeItem(item.id)">Remove</button>
+</div>
+```
+**feed-item.js**
+```js
+wilson.component('dashboard', {
+  scope: {
+    item: '=item'
+  },
+  inherit: {
+    removeFeedItem: 'removeItem'
+  },
+  controller: ['$scope', '$timeout', function($scope, $timeout) {
+    
+    // NOTE:  There are no explicit methods declared here
+    
+  }]
+});
+```
+
+In the example above, the parent news-feed component instantiates a list of feed-item components, binding down the feed item using the
+"item" attribute. The feed-item component declaration specifies an "inherit" block that states that this component should inherit the
+"removeFeedItem" method from its parent onto its own scope with an alias of "removeItem". From the feed-item markup, the "removeItem"
+method is called directly using the ng-click directive (as the alias method is automatically applied to the $scope -- no explicit declaration in the controller).
+
+
 ## Dependency hooks
 
 Wilson components provide special hooks to optimize the loading of external scriptDependencies. Many times

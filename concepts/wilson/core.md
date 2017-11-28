@@ -196,7 +196,7 @@ wilson.component('dashboard', {
 ```
 
 > NOTE: The routeInfo object is a virtual property and represents a copy of the currently active routeInfo. This
-> object is immutable and cannot be changed by its accessor. **IMPORTANT: This means if wilson.routeInfo is stored into a local
+> object is immutable and cannot be changed by its accessor. **IMPORTANT: If wilson.routeInfo is stored into a local
 > variable it will not update on route change.** 
 
 
